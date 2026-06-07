@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>造局台 | 灵感到执行蓝图</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="workspace">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="造局台首页">
+        <span class="brand-mark">创</span>
+        <span>
+          <strong>造局台</strong>
+          <small>Idea Discipline Studio</small>
+        </span>
+      </a>
+      <div class="top-actions">
+        <button class="ghost-btn" id="shuffleBtn" type="button"><span aria-hidden="true">↻</span>换一个方向</button>
+        <button class="primary-btn" id="copyBtn" type="button"><span aria-hidden="true">⎘</span>复制蓝图</button>
+      </div>
+    </header>
+
+    <section class="studio-grid" aria-label="创作工作台">
+      <aside class="panel inspiration-panel">
+        <div class="panel-head">
+          <p class="eyebrow">Source</p>
+          <h1>收藏主题</h1>
+        </div>
+        <div class="theme-list" id="themeList"></div>
+        <figure class="map-visual">
+          <img src="assets/field-map.svg" alt="灵感、证据、执行和复盘构成的判断地图" />
+        </figure>
+      </aside>
+
+      <section class="panel build-panel">
+        <div class="panel-head inline-head">
+          <div>
+            <p class="eyebrow">Build</p>
+            <h2>创作闸门</h2>
+          </div>
+          <span class="state-pill" id="statePill">读取中</span>
+        </div>
+
+        <label class="idea-input">
+          <span>当前想法</span>
+          <textarea id="ideaText" rows="4"></textarea>
+        </label>
+
+        <div class="control-grid">
+          <label class="slider-line">
+            <span>证据强度 <b id="evidenceValue">70</b></span>
+            <input id="evidenceInput" type="range" min="0" max="100" value="70" />
+          </label>
+          <label class="slider-line">
+            <span>执行清晰度 <b id="executionValue">68</b></span>
+            <input id="executionInput" type="range" min="0" max="100" value="68" />
+          </label>
+          <label class="slider-line">
+            <span>叙事风险 <b id="riskValue">38</b></span>
+            <input id="riskInput" type="range" min="0" max="100" value="38" />
+          </label>
+        </div>
+
+        <div class="check-grid">
+          <label><input id="freshDataInput" type="checkbox" checked /> 数据时点明确</label>
+          <label><input id="bearCaseInput" type="checkbox" checked /> 有反方观点</label>
+          <label><input id="exitRuleInput" type="checkbox" /> 有退出条件</label>
+          <label><input id="auditableInput" type="checkbox" checked /> 能复盘验证</label>
+        </div>
+
+        <div class="radar-wrap">
+          <canvas id="radarCanvas" width="720" height="260" aria-label="证据雷达图"></canvas>
+        </div>
+      </section>
+
+      <aside class="panel output-panel">
+        <div class="panel-head">
+          <p class="eyebrow">Output</p>
+          <h2>执行蓝图</h2>
+        </div>
+        <div class="verdict" id="verdictBox">
+          <span>创作许可</span>
+          <strong id="verdictTitle">读取中</strong>
+          <p id="verdictText"></p>
+        </div>
+        <div class="blueprint">
+          <section>
+            <h3>第一屏</h3>
+            <p id="screenCopy"></p>
+          </section>
+          <section>
+            <h3>最小版本</h3>
+            <ul id="mvpList"></ul>
+          </section>
+          <section>
+            <h3>复盘问题</h3>
+            <ul id="reviewList"></ul>
+          </section>
+        </div>
+      </aside>
+    </section>
+
+    <section class="roadmap-band" aria-label="发布路线">
+      <div class="roadmap-head">
+        <p class="eyebrow">Ship</p>
+        <h2>从灵感到上线</h2>
+      </div>
+      <div class="roadmap" id="roadmap"></div>
+    </section>
+
+    <footer class="site-foot">
+      <span>自用研究与创作工具</span>
+      <span>不输出个股买卖建议，不替代法律、财务或投资顾问意见。</span>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
