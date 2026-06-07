@@ -67,6 +67,7 @@ a {
   border-radius: 8px;
   color: #fff;
   background: var(--ink);
+  font-size: 13px;
   font-weight: 900;
 }
 
@@ -242,6 +243,11 @@ input:focus {
   padding: 10px;
 }
 
+.slider-field.priority {
+  border-color: rgba(38, 90, 155, .32);
+  background: rgba(38, 90, 155, .04);
+}
+
 .slider-field span {
   display: flex;
   justify-content: space-between;
@@ -307,7 +313,7 @@ input:focus {
 
 table {
   width: 100%;
-  min-width: 760px;
+  min-width: 680px;
   border-collapse: collapse;
   background: #fff;
 }
@@ -315,7 +321,7 @@ table {
 th,
 td {
   border-bottom: 1px solid var(--line);
-  padding: 11px 10px;
+  padding: 11px 8px;
   text-align: left;
   font-size: 13px;
   white-space: nowrap;
@@ -426,6 +432,35 @@ tr.selected {
   margin: 16px 0;
 }
 
+.path-card {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.path-card div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+
+.path-card span,
+.review-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.path-card strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 18px;
+}
+
 .score-bars div {
   display: grid;
   gap: 6px;
@@ -462,6 +497,35 @@ meter {
 
 .compare-panel {
   margin-top: 14px;
+}
+
+.review-panel {
+  margin-top: 14px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.review-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+}
+
+.review-card b {
+  display: block;
+  margin-top: 8px;
+}
+
+.review-card p {
+  margin: 8px 0 0;
+  color: #475467;
+  font-size: 12px;
+  line-height: 1.55;
 }
 
 .process-visual {
@@ -557,6 +621,10 @@ meter {
   .compare-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 760px) {
@@ -574,7 +642,9 @@ meter {
   .top-actions,
   .summary-strip,
   .workspace,
-  .compare-grid {
+  .compare-grid,
+  .path-card,
+  .review-grid {
     grid-template-columns: 1fr;
   }
 

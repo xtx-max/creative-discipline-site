@@ -1,16 +1,16 @@
 <svg width="720" height="360" viewBox="0 0 720 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">选股筛选与分析流程</title>
-  <desc id="desc">条件筛选、量化评分、主观判断和风险闸门组成候选股票分析流程。</desc>
+  <title id="title">一周期十倍候选分析流程</title>
+  <desc id="desc">周期定位、十倍路径、量化评分、主观判断和风险闸门组成候选股票分析流程。</desc>
   <rect width="720" height="360" rx="18" fill="#F8FAFC"/>
   <rect x="44" y="54" width="138" height="84" rx="12" fill="#265A9B"/>
-  <text x="113" y="91" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="800" fill="white">条件</text>
-  <text x="113" y="116" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" fill="#E8F0FF">行业 / 动量 / 质量</text>
+  <text x="113" y="91" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="800" fill="white">周期</text>
+  <text x="113" y="116" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" fill="#E8F0FF">早期 / 加速 / 拥挤</text>
   <rect x="214" y="54" width="138" height="84" rx="12" fill="#0B7A5B"/>
-  <text x="283" y="91" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="800" fill="white">量化70</text>
-  <text x="283" y="116" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" fill="#E8FFF6">趋势 / 估值 / 回撤</text>
+  <text x="283" y="91" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="800" fill="white">路径</text>
+  <text x="283" y="116" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" fill="#E8FFF6">倍数 / 拐点 / 期权</text>
   <rect x="384" y="54" width="138" height="84" rx="12" fill="#A86900"/>
-  <text x="453" y="91" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="800" fill="white">主观30</text>
-  <text x="453" y="116" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" fill="#FFF5DE">逻辑 / 催化 / 反方</text>
+  <text x="453" y="91" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="800" fill="white">分析</text>
+  <text x="453" y="116" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" fill="#FFF5DE">量化70 / 主观30</text>
   <rect x="554" y="54" width="122" height="84" rx="12" fill="#BD3D35"/>
   <text x="615" y="91" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="800" fill="white">风险</text>
   <text x="615" y="116" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" fill="#FFECEA">仓位 / 复查</text>
@@ -18,6 +18,6 @@
   <path d="M352 96H384" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
   <path d="M522 96H554" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
   <rect x="80" y="196" width="560" height="86" rx="14" fill="white" stroke="#D8DEE8"/>
-  <text x="360" y="232" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="22" font-weight="900" fill="#14171F">候选排序 + 个股分析</text>
-  <text x="360" y="260" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" fill="#667085">输出研究清单，不直接输出买卖指令</text>
+  <text x="360" y="232" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="22" font-weight="900" fill="#14171F">十倍候选排序 + 失效条件</text>
+  <text x="360" y="260" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" fill="#667085">输出研究路径，不承诺收益，不直接输出买卖指令</text>
 </svg>

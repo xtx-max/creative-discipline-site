@@ -217,34 +217,189 @@ const stocks = [
   },
 ];
 
-const presets = {
-  balanced: {
-    name: '均衡成长',
-    minScore: 68,
-    momentum: 55,
-    quality: 60,
-    valuationRisk: 78,
-    drawdown: 72,
-    positiveCashFlow: true,
-    profitable: true,
-    liquid: true,
-    hasCatalyst: false,
+const stockMeta = {
+  NVDA: {
+    cyclePhase: 'acceleration',
+    cycleLabel: '加速确认',
+    cycleElasticity: 93,
+    earningsInflection: 84,
+    narrativePower: 96,
+    optionality: 88,
+    pathMultiple: 5.8,
+    tenXGate: true,
+    path: 'AI 算力周期仍在扩张，若推理需求、网络和软件栈继续放量，存在高弹性路径。',
+    invalidation: '云厂商资本开支连续下修、毛利率明显跌破预期、订单能见度下降。',
   },
-  growth: {
-    name: '高成长',
-    minScore: 74,
-    momentum: 62,
+  MSFT: {
+    cyclePhase: 'mid',
+    cycleLabel: '中段扩张',
+    cycleElasticity: 68,
+    earningsInflection: 72,
+    narrativePower: 82,
+    optionality: 64,
+    pathMultiple: 3.2,
+    tenXGate: false,
+    path: '质量和现金流强，但市值基数大，更像稳健复合而非一周期十倍候选。',
+    invalidation: 'AI 投入无法转化为收入增长，云增长继续放缓。',
+  },
+  AAPL: {
+    cyclePhase: 'late',
+    cycleLabel: '后段拥挤',
+    cycleElasticity: 42,
+    earningsInflection: 46,
+    narrativePower: 60,
+    optionality: 44,
+    pathMultiple: 2.1,
+    tenXGate: false,
+    path: '现金流质量强，但当前更偏质量资产，缺少一周期十倍所需的收入和估值双击。',
+    invalidation: '硬件周期继续走弱，服务业务增速无法抵消估值压力。',
+  },
+  LLY: {
+    cyclePhase: 'acceleration',
+    cycleLabel: '加速确认',
+    cycleElasticity: 79,
+    earningsInflection: 86,
+    narrativePower: 88,
+    optionality: 76,
+    pathMultiple: 4.8,
+    tenXGate: true,
+    path: '减重药和代谢疾病周期仍有放量空间，关键在产能、适应症扩展和定价韧性。',
+    invalidation: '竞品临床数据显著优于预期，医保/定价压力超预期，产能兑现失败。',
+  },
+  JPM: {
+    cyclePhase: 'mid',
+    cycleLabel: '中段扩张',
+    cycleElasticity: 35,
+    earningsInflection: 54,
+    narrativePower: 42,
+    optionality: 34,
+    pathMultiple: 1.9,
+    tenXGate: false,
+    path: '适合金融质量和周期配置，不符合一周期十倍的高弹性要求。',
+    invalidation: '信用损失上行、净息差收缩、监管资本要求提高。',
+  },
+  XOM: {
+    cyclePhase: 'mid',
+    cycleLabel: '中段扩张',
+    cycleElasticity: 44,
+    earningsInflection: 38,
+    narrativePower: 36,
+    optionality: 40,
+    pathMultiple: 2.3,
+    tenXGate: false,
+    path: '能源现金流和回购较强，但十倍路径更依赖极端周期价格，不适合作为默认候选。',
+    invalidation: '油价中枢下移、资本回报下降、成本曲线恶化。',
+  },
+  TSLA: {
+    cyclePhase: 'early',
+    cycleLabel: '早期拐点',
+    cycleElasticity: 86,
+    earningsInflection: 46,
+    narrativePower: 92,
+    optionality: 95,
+    pathMultiple: 6.4,
+    tenXGate: true,
+    path: '自动驾驶、机器人和储能提供期权性，但基本面和回撤风险使其只能进入高风险观察。',
+    invalidation: '汽车利润率继续下行，FSD 商业化延后，现金流无法支持叙事。',
+  },
+  ASML: {
+    cyclePhase: 'early',
+    cycleLabel: '早期拐点',
+    cycleElasticity: 74,
+    earningsInflection: 78,
+    narrativePower: 82,
+    optionality: 72,
+    pathMultiple: 5.1,
+    tenXGate: true,
+    path: '先进制程设备稀缺，若半导体资本开支从底部重新扩张，具备周期弹性。',
+    invalidation: '先进制程需求推迟、出口限制扩大、订单恢复低于预期。',
+  },
+  '600519': {
+    cyclePhase: 'late',
+    cycleLabel: '后段拥挤',
+    cycleElasticity: 28,
+    earningsInflection: 40,
+    narrativePower: 44,
+    optionality: 24,
+    pathMultiple: 1.8,
+    tenXGate: false,
+    path: '高质量现金流资产，但不符合十倍候选所需的高增长和高期权性。',
+    invalidation: '批价持续下行、消费景气走弱、渠道库存压力上升。',
+  },
+  '00700': {
+    cyclePhase: 'early',
+    cycleLabel: '早期拐点',
+    cycleElasticity: 70,
+    earningsInflection: 72,
+    narrativePower: 76,
+    optionality: 68,
+    pathMultiple: 4.3,
+    tenXGate: true,
+    path: '游戏、广告、AI 应用和回购形成再增长组合，关键在利润再加速能否兑现。',
+    invalidation: '核心业务增长停滞，监管压力回升，AI 投入无法形成商业化。',
+  },
+  '300750': {
+    cyclePhase: 'early',
+    cycleLabel: '早期拐点',
+    cycleElasticity: 76,
+    earningsInflection: 66,
+    narrativePower: 70,
+    optionality: 72,
+    pathMultiple: 4.5,
+    tenXGate: true,
+    path: '动力电池、储能和海外市场若重新进入利润扩张，具备周期修复弹性。',
+    invalidation: '价格战持续、海外扩张受阻、储能利润率不达预期。',
+  },
+  PDD: {
+    cyclePhase: 'acceleration',
+    cycleLabel: '加速确认',
+    cycleElasticity: 88,
+    earningsInflection: 90,
+    narrativePower: 84,
+    optionality: 82,
+    pathMultiple: 7.2,
+    tenXGate: true,
+    path: '跨境电商和平台效率提供高增长路径，关键在监管、补贴和利润质量。',
+    invalidation: '海外监管显著收紧，获客成本失控，利润质量无法验证。',
+  },
+};
+
+const presets = {
+  tenx: {
+    name: '一周期十倍',
+    minScore: 64,
+    pathScore: 72,
+    pathMultiple: 4,
+    momentum: 50,
     quality: 55,
     valuationRisk: 86,
     drawdown: 78,
-    positiveCashFlow: false,
+    positiveCashFlow: true,
     profitable: true,
     liquid: true,
     hasCatalyst: true,
+    tenXGate: true,
+  },
+  inflection: {
+    name: '早期拐点',
+    minScore: 60,
+    pathScore: 66,
+    pathMultiple: 3,
+    momentum: 45,
+    quality: 50,
+    valuationRisk: 88,
+    drawdown: 82,
+    positiveCashFlow: false,
+    profitable: false,
+    liquid: true,
+    hasCatalyst: false,
+    tenXGate: false,
   },
   quality: {
-    name: '高质量',
-    minScore: 76,
+    name: '质量十倍',
+    minScore: 68,
+    pathScore: 60,
+    pathMultiple: 2,
     momentum: 45,
     quality: 78,
     valuationRisk: 68,
@@ -253,10 +408,13 @@ const presets = {
     profitable: true,
     liquid: true,
     hasCatalyst: false,
+    tenXGate: false,
   },
   defensive: {
-    name: '防守低波',
-    minScore: 68,
+    name: '防守观察',
+    minScore: 62,
+    pathScore: 45,
+    pathMultiple: 1,
     momentum: 40,
     quality: 68,
     valuationRisk: 58,
@@ -265,6 +423,7 @@ const presets = {
     profitable: true,
     liquid: true,
     hasCatalyst: false,
+    tenXGate: false,
   },
 };
 
@@ -275,11 +434,16 @@ const els = {
   dataStamp: document.getElementById('dataStamp'),
   market: document.getElementById('marketInput'),
   sector: document.getElementById('sectorInput'),
+  cycle: document.getElementById('cycleInput'),
+  pathScore: document.getElementById('pathScoreInput'),
+  pathMultiple: document.getElementById('pathMultipleInput'),
   minScore: document.getElementById('minScoreInput'),
   momentum: document.getElementById('momentumInput'),
   quality: document.getElementById('qualityInput'),
   valuationRisk: document.getElementById('valuationRiskInput'),
   drawdown: document.getElementById('drawdownInput'),
+  pathScoreValue: document.getElementById('pathScoreValue'),
+  pathMultipleValue: document.getElementById('pathMultipleValue'),
   minScoreValue: document.getElementById('minScoreValue'),
   momentumValue: document.getElementById('momentumValue'),
   qualityValue: document.getElementById('qualityValue'),
@@ -289,6 +453,7 @@ const els = {
   profitable: document.getElementById('profitableInput'),
   liquid: document.getElementById('liquidInput'),
   hasCatalyst: document.getElementById('hasCatalystInput'),
+  tenXGate: document.getElementById('tenXGateInput'),
   sort: document.getElementById('sortInput'),
   stockRows: document.getElementById('stockRows'),
   emptyState: document.getElementById('emptyState'),
@@ -297,17 +462,20 @@ const els = {
   qualityMeter: document.getElementById('qualityMeter'),
   valuationMeter: document.getElementById('valuationMeter'),
   riskMeter: document.getElementById('riskMeter'),
+  pathCard: document.getElementById('pathCard'),
   quantList: document.getElementById('quantList'),
   subjectiveList: document.getElementById('subjectiveList'),
+  pathList: document.getElementById('pathList'),
   riskList: document.getElementById('riskList'),
   compareGrid: document.getElementById('compareGrid'),
+  reviewGrid: document.getElementById('reviewGrid'),
   reset: document.getElementById('resetBtn'),
   copy: document.getElementById('copyBtn'),
   tabs: Array.from(document.querySelectorAll('.tab-btn')),
 };
 
 let selectedTicker = stocks[0].ticker;
-let activePreset = 'balanced';
+let activePreset = 'tenx';
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -326,6 +494,17 @@ function clamp(value, min = 0, max = 100) {
 function scoreStock(stock) {
   const valuationSafety = 100 - stock.valuationRisk;
   const riskSafety = 100 - stock.drawdownRisk;
+  const pathPenalty = stock.valuationRisk * 0.07 + stock.drawdownRisk * 0.08;
+  const pathScore = clamp(Math.round(
+    stock.cycleElasticity * 0.22 +
+    stock.earningsInflection * 0.2 +
+    stock.narrativePower * 0.17 +
+    stock.optionality * 0.18 +
+    stock.growth * 0.1 +
+    stock.momentum * 0.08 +
+    stock.liquidity * 0.05 -
+    pathPenalty
+  ));
   const quant = Math.round(
     stock.momentum * 0.22 +
     stock.quality * 0.2 +
@@ -335,20 +514,22 @@ function scoreStock(stock) {
     stock.growth * 0.18
   );
   const subjective = Math.round(
-    stock.growth * 0.42 +
-    (stock.catalyst ? 88 : 52) * 0.28 +
-    stock.quality * 0.18 +
+    stock.narrativePower * 0.28 +
+    stock.optionality * 0.22 +
+    stock.growth * 0.2 +
+    (stock.catalyst ? 88 : 52) * 0.18 +
     riskSafety * 0.12
   );
-  const score = Math.round(quant * 0.7 + subjective * 0.3);
-  return { score, quant, subjective, valuationSafety, riskSafety };
+  const score = Math.round(quant * 0.52 + subjective * 0.2 + pathScore * 0.28);
+  return { score, quant, subjective, pathScore, valuationSafety, riskSafety };
 }
 
 function labelFor(stock, score) {
-  if (stock.drawdownRisk >= 78 || stock.valuationRisk >= 82) return '高风险观察';
-  if (score >= 82) return '重点研究';
-  if (score >= 74) return '候选';
-  if (score >= 66) return '观察';
+  if (stock.drawdownRisk >= 82 || stock.valuationRisk >= 88) return '高风险观察';
+  if (stock.tenXGate && stock.pathScore >= 82 && stock.pathMultiple >= 6) return '十倍核心候选';
+  if (stock.tenXGate && stock.pathScore >= 72 && stock.pathMultiple >= 4) return '十倍候选';
+  if (score >= 66) return '路径待验证';
+  if (!stock.tenXGate && stock.quality >= 78) return '非十倍质量池';
   return '剔除';
 }
 
@@ -362,6 +543,9 @@ function getFilters() {
   return {
     market: els.market.value,
     sector: els.sector.value,
+    cycle: els.cycle.value,
+    pathScore: Number(els.pathScore.value),
+    pathMultiple: Number(els.pathMultiple.value),
     minScore: Number(els.minScore.value),
     momentum: Number(els.momentum.value),
     quality: Number(els.quality.value),
@@ -371,17 +555,36 @@ function getFilters() {
     profitable: els.profitable.checked,
     liquid: els.liquid.checked,
     hasCatalyst: els.hasCatalyst.checked,
+    tenXGate: els.tenXGate.checked,
     sort: els.sort.value,
   };
 }
 
 function enrichedStocks() {
-  return stocks.map(stock => ({ ...stock, ...scoreStock(stock) }));
+  return stocks.map(stock => {
+    const meta = stockMeta[stock.ticker] ?? {
+      cyclePhase: 'mid',
+      cycleLabel: '中段扩张',
+      cycleElasticity: 50,
+      earningsInflection: 50,
+      narrativePower: 50,
+      optionality: 50,
+      pathMultiple: 2,
+      tenXGate: false,
+      path: '缺少十倍路径数据。',
+      invalidation: '数据缺失。',
+    };
+    const full = { ...stock, ...meta };
+    return { ...full, ...scoreStock(full) };
+  });
 }
 
 function passesFilters(stock, filters) {
   if (filters.market !== 'all' && stock.market !== filters.market) return false;
   if (filters.sector !== 'all' && stock.sector !== filters.sector) return false;
+  if (filters.cycle !== 'all' && stock.cyclePhase !== filters.cycle) return false;
+  if (stock.pathScore < filters.pathScore) return false;
+  if (stock.pathMultiple < filters.pathMultiple) return false;
   if (stock.score < filters.minScore) return false;
   if (stock.momentum < filters.momentum) return false;
   if (stock.quality < filters.quality) return false;
@@ -391,11 +594,14 @@ function passesFilters(stock, filters) {
   if (filters.profitable && !stock.profitable) return false;
   if (filters.liquid && stock.liquidity < 70) return false;
   if (filters.hasCatalyst && !stock.catalyst) return false;
+  if (filters.tenXGate && !stock.tenXGate) return false;
   return true;
 }
 
 function sortStocks(list, sortKey) {
   return [...list].sort((a, b) => {
+    if (sortKey === 'pathScore') return b.pathScore - a.pathScore;
+    if (sortKey === 'pathMultiple') return b.pathMultiple - a.pathMultiple;
     if (sortKey === 'momentum') return b.momentum - a.momentum;
     if (sortKey === 'quality') return b.quality - a.quality;
     if (sortKey === 'risk') return a.drawdownRisk - b.drawdownRisk;
@@ -414,10 +620,10 @@ function renderRows(list) {
     <tr class="${stock.ticker === selectedTicker ? 'selected' : ''}" data-ticker="${escapeHtml(stock.ticker)}">
       <td><button class="ticker-btn" type="button">${escapeHtml(stock.ticker)}</button></td>
       <td>${escapeHtml(stock.name)}</td>
-      <td>${escapeHtml(stock.sector)}</td>
+      <td>${escapeHtml(stock.cycleLabel)}</td>
+      <td><strong>${stock.pathScore}</strong></td>
       <td><strong>${stock.score}</strong></td>
-      <td>${stock.quant}</td>
-      <td>${stock.subjective}</td>
+      <td>${stock.pathMultiple.toFixed(1)}x</td>
       <td><span class="risk-pill ${riskClass(stock)}">${stock.drawdownRisk}</span></td>
       <td>${escapeHtml(labelFor(stock, stock.score))}</td>
     </tr>
@@ -430,29 +636,50 @@ function renderSelected(stock) {
     <div>
       <span class="market-tag">${escapeHtml(stock.market)}</span>
       <h3>${escapeHtml(stock.ticker)} ${escapeHtml(stock.name)}</h3>
-      <p>${escapeHtml(stock.sector)} · ${formatPrice(stock)}</p>
+      <p>${escapeHtml(stock.sector)} · ${escapeHtml(stock.cycleLabel)} · ${formatPrice(stock)}</p>
     </div>
-    <strong>${stock.score}</strong>
+    <strong>${stock.pathScore}</strong>
     <span class="status-line">${escapeHtml(label)}</span>
   `;
-  els.momentumMeter.value = stock.momentum;
-  els.qualityMeter.value = stock.quality;
-  els.valuationMeter.value = stock.valuationSafety;
+  els.momentumMeter.value = stock.cycleElasticity;
+  els.qualityMeter.value = stock.earningsInflection;
+  els.valuationMeter.value = stock.narrativePower;
   els.riskMeter.value = stock.riskSafety;
+  els.pathCard.innerHTML = `
+    <div>
+      <span>路径倍数</span>
+      <strong>${stock.pathMultiple.toFixed(1)}x</strong>
+    </div>
+    <div>
+      <span>十倍闸门</span>
+      <strong>${stock.tenXGate ? '通过' : '未通过'}</strong>
+    </div>
+    <div>
+      <span>综合分</span>
+      <strong>${stock.score}</strong>
+    </div>
+  `;
   els.quantList.innerHTML = [
-    `趋势/动量：${stock.momentum}，${stock.momentum >= 70 ? '价格强势明确' : '趋势证据一般'}`,
-    `质量/盈利：${stock.quality}，${stock.profitable ? '盈利状态通过' : '盈利状态未通过'}`,
+    `价格动量：${stock.momentum}，${stock.momentum >= 70 ? '资金趋势较强' : '趋势仍需确认'}`,
+    `业绩拐点：${stock.earningsInflection}，${stock.earningsInflection >= 75 ? '增长斜率具备确认度' : '拐点证据不足'}`,
     `估值风险：${stock.valuationRisk}，${stock.valuationRisk <= 60 ? '估值压力可控' : '估值压力偏高'}`,
     `流动性：${stock.liquidity}，${stock.liquidity >= 70 ? '交易容量通过' : '流动性不足'}`,
   ].map(item => `<li>${escapeHtml(item)}</li>`).join('');
   els.subjectiveList.innerHTML = [
     `长期逻辑：${stock.thesis}`,
-    `催化剂：${stock.catalyst ? '存在近期催化剂，需要跟踪兑现节奏' : '缺少明确短期催化剂，更适合观察'}`,
+    `叙事强度：${stock.narrativePower}，${stock.narrativePower >= 80 ? '市场能理解且可传播' : '叙事仍需证据支撑'}`,
+    `期权性：${stock.optionality}，${stock.optionality >= 80 ? '存在非线性上行来源' : '非线性来源一般'}`,
     `反方观点：${stock.bear}`,
   ].map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  els.pathList.innerHTML = [
+    `周期阶段：${stock.cycleLabel}，一周期十倍更偏好早期拐点或加速确认阶段。`,
+    `路径假设：${stock.path}`,
+    `目标倍数不是承诺：当前仅把 ${stock.pathMultiple.toFixed(1)}x 作为研究路径上限情景。`,
+    `失效条件：${stock.invalidation}`,
+  ].map(item => `<li>${escapeHtml(item)}</li>`).join('');
   els.riskList.innerHTML = [
-    `最大仓位建议：单票不超过自定义组合上限，未做适当性评估前不输出买入指令。`,
-    `触发复查：综合分跌破 ${Math.max(60, stock.score - 10)}、回撤风险升至 75 以上、或核心逻辑被财报/新闻证伪。`,
+    `最大仓位建议：十倍候选波动大，未做适当性评估前不输出买入指令或仓位。`,
+    `触发复查：路径分跌破 ${Math.max(55, stock.pathScore - 12)}、回撤风险升至 80 以上、或核心逻辑被财报/新闻证伪。`,
     `数据缺口：当前为示例静态数据，真实使用必须接入行情、财报、公告和新闻更新时间。`,
   ].map(item => `<li>${escapeHtml(item)}</li>`).join('');
 }
@@ -466,22 +693,40 @@ function renderCompare(list) {
         <span>${escapeHtml(stock.name)}</span>
       </div>
       <div class="mini-bars">
-        <span style="--w:${stock.score}%"><i>综合 ${stock.score}</i></span>
-        <span style="--w:${stock.momentum}%"><i>动量 ${stock.momentum}</i></span>
-        <span style="--w:${stock.quality}%"><i>质量 ${stock.quality}</i></span>
+        <span style="--w:${stock.pathScore}%"><i>路径 ${stock.pathScore}</i></span>
+        <span style="--w:${Math.min(100, stock.pathMultiple * 10)}%"><i>倍数 ${stock.pathMultiple.toFixed(1)}x</i></span>
+        <span style="--w:${stock.riskSafety}%"><i>风控 ${stock.riskSafety}</i></span>
       </div>
     </article>
   `).join('');
 }
 
+function renderReview(stock) {
+  const gates = [
+    ['01', '数据更新', '行情、财报、公告、新闻时间戳全部可追溯。'],
+    ['02', '路径验证', `${stock.cycleLabel} 是否继续支持 ${stock.pathMultiple.toFixed(1)}x 上限情景。`],
+    ['03', '反方压力', stock.invalidation],
+    ['04', '退出纪律', '路径分、回撤风险或核心叙事任一破位即降级。'],
+  ];
+  els.reviewGrid.innerHTML = gates.map(gate => `
+    <article class="review-card">
+      <span>${gate[0]}</span>
+      <b>${escapeHtml(gate[1])}</b>
+      <p>${escapeHtml(gate[2])}</p>
+    </article>
+  `).join('');
+}
+
 function updateLabels() {
+  els.pathScoreValue.textContent = els.pathScore.value;
+  els.pathMultipleValue.textContent = els.pathMultiple.value;
   els.minScoreValue.textContent = els.minScore.value;
   els.momentumValue.textContent = els.momentum.value;
   els.qualityValue.textContent = els.quality.value;
   els.valuationRiskValue.textContent = els.valuationRisk.value;
   els.drawdownValue.textContent = els.drawdown.value;
   els.strategyName.textContent = presets[activePreset]?.name ?? '自定义';
-  els.dataStamp.textContent = '示例数据 2026-06-08';
+  els.dataStamp.textContent = '示例路径模型 2026-06-08';
 }
 
 function render() {
@@ -493,16 +738,19 @@ function render() {
   }
   const selected = enrichedStocks().find(stock => stock.ticker === selectedTicker) ?? enrichedStocks()[0];
   els.matchCount.textContent = list.length;
-  els.topScore.textContent = list[0]?.score ?? 0;
+  els.topScore.textContent = list[0]?.pathScore ?? 0;
   els.emptyState.hidden = list.length > 0;
   renderRows(list);
   renderSelected(selected);
   renderCompare(list);
+  renderReview(selected);
 }
 
 function applyPreset(key) {
   activePreset = key;
   const preset = presets[key];
+  els.pathScore.value = preset.pathScore;
+  els.pathMultiple.value = preset.pathMultiple;
   els.minScore.value = preset.minScore;
   els.momentum.value = preset.momentum;
   els.quality.value = preset.quality;
@@ -512,6 +760,7 @@ function applyPreset(key) {
   els.profitable.checked = preset.profitable;
   els.liquid.checked = preset.liquid;
   els.hasCatalyst.checked = preset.hasCatalyst;
+  els.tenXGate.checked = preset.tenXGate;
   els.tabs.forEach(tab => tab.setAttribute('aria-pressed', String(tab.dataset.preset === key)));
   render();
 }
@@ -521,17 +770,25 @@ function analysisText() {
   return [
     `标的/主题：${stock.ticker} ${stock.name}`,
     '数据时点：示例静态数据 2026-06-08',
-    '适用对象假设：仅用于研究筛选，不构成个性化投资建议',
+    '适用对象假设：仅用于一周期十倍候选研究，不构成个性化投资建议',
+    '',
+    `十倍路径分：${stock.pathScore}`,
+    `路径倍数假设：${stock.pathMultiple.toFixed(1)}x`,
+    `周期阶段：${stock.cycleLabel}`,
+    `路径假设：${stock.path}`,
+    `失效条件：${stock.invalidation}`,
     '',
     `量化评分70：${stock.quant}`,
     `- 趋势/动量：${stock.momentum}`,
+    `- 业绩拐点：${stock.earningsInflection}`,
     `- 估值/质量：质量 ${stock.quality}；估值风险 ${stock.valuationRisk}`,
     `- 波动/回撤：回撤风险 ${stock.drawdownRisk}`,
     `- 流动性/交易成本：${stock.liquidity}`,
     '',
     `主观评分30：${stock.subjective}`,
     `- 长期逻辑：${stock.thesis}`,
-    `- 催化剂：${stock.catalyst ? '有' : '无明确短期催化剂'}`,
+    `- 叙事强度：${stock.narrativePower}`,
+    `- 期权性：${stock.optionality}`,
     `- 反方观点：${stock.bear}`,
     '',
     `最终状态：${labelFor(stock, stock.score)}`,
@@ -543,6 +800,9 @@ function analysisText() {
 [
   els.market,
   els.sector,
+  els.cycle,
+  els.pathScore,
+  els.pathMultiple,
   els.minScore,
   els.momentum,
   els.quality,
@@ -552,6 +812,7 @@ function analysisText() {
   els.profitable,
   els.liquid,
   els.hasCatalyst,
+  els.tenXGate,
   els.sort,
 ].forEach(input => {
   input.addEventListener('input', () => {
@@ -580,9 +841,10 @@ els.tabs.forEach(tab => {
 els.reset.addEventListener('click', () => {
   els.market.value = 'all';
   els.sector.value = 'all';
-  els.sort.value = 'score';
+  els.cycle.value = 'all';
+  els.sort.value = 'pathScore';
   selectedTicker = stocks[0].ticker;
-  applyPreset('balanced');
+  applyPreset('tenx');
 });
 
 els.copy.addEventListener('click', async () => {
@@ -597,4 +859,4 @@ els.copy.addEventListener('click', async () => {
   }
 });
 
-applyPreset('balanced');
+applyPreset('tenx');

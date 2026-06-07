@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>选股雷达 | 条件筛选与分析工作台</title>
+  <title>十倍周期雷达 | 选股分析平台</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
-      <a class="brand" href="./" aria-label="选股雷达首页">
-        <span class="brand-mark">股</span>
+      <a class="brand" href="./" aria-label="十倍周期雷达首页">
+        <span class="brand-mark">10x</span>
         <span>
-          <strong>选股雷达</strong>
-          <small>Stock Screening & Analysis</small>
+          <strong>十倍周期雷达</strong>
+          <small>Cycle 10x Candidate Lab</small>
         </span>
       </a>
       <div class="top-actions">
@@ -24,19 +24,19 @@
 
     <section class="summary-strip" aria-label="筛选概览">
       <article>
-        <span>通过数量</span>
+        <span>十倍候选</span>
         <strong id="matchCount">0</strong>
       </article>
       <article>
-        <span>最高综合分</span>
+        <span>最高路径分</span>
         <strong id="topScore">0</strong>
       </article>
       <article>
         <span>当前策略</span>
-        <strong id="strategyName">均衡成长</strong>
+        <strong id="strategyName">一周期十倍</strong>
       </article>
       <article>
-        <span>数据时点</span>
+        <span>研究边界</span>
         <strong id="dataStamp">示例数据</strong>
       </article>
     </section>
@@ -70,7 +70,26 @@
           </select>
         </label>
 
+        <label class="field">
+          <span>周期阶段</span>
+          <select id="cycleInput">
+            <option value="all">全部阶段</option>
+            <option value="early">早期拐点</option>
+            <option value="acceleration">加速确认</option>
+            <option value="mid">中段扩张</option>
+            <option value="late">后段拥挤</option>
+          </select>
+        </label>
+
         <div class="slider-stack">
+          <label class="slider-field priority">
+            <span>最低十倍路径分 <b id="pathScoreValue">72</b></span>
+            <input id="pathScoreInput" type="range" min="30" max="95" value="72" />
+          </label>
+          <label class="slider-field priority">
+            <span>最低路径倍数 <b id="pathMultipleValue">4</b>x</span>
+            <input id="pathMultipleInput" type="range" min="1" max="10" value="4" />
+          </label>
           <label class="slider-field">
             <span>最低综合分 <b id="minScoreValue">68</b></span>
             <input id="minScoreInput" type="range" min="40" max="95" value="68" />
@@ -98,18 +117,19 @@
           <label><input id="profitableInput" type="checkbox" checked /> 已盈利</label>
           <label><input id="liquidInput" type="checkbox" checked /> 流动性充足</label>
           <label><input id="hasCatalystInput" type="checkbox" /> 近期催化剂</label>
+          <label><input id="tenXGateInput" type="checkbox" checked /> 十倍路径可解释</label>
         </div>
 
         <div class="strategy-tabs" role="tablist" aria-label="策略预设">
-          <button class="tab-btn" type="button" data-preset="balanced" aria-pressed="true">均衡</button>
-          <button class="tab-btn" type="button" data-preset="growth" aria-pressed="false">成长</button>
+          <button class="tab-btn" type="button" data-preset="tenx" aria-pressed="true">十倍</button>
+          <button class="tab-btn" type="button" data-preset="inflection" aria-pressed="false">拐点</button>
           <button class="tab-btn" type="button" data-preset="quality" aria-pressed="false">质量</button>
           <button class="tab-btn" type="button" data-preset="defensive" aria-pressed="false">防守</button>
         </div>
 
         <div class="disclosure-box">
           <strong>边界</strong>
-          <p>当前为静态网站示例数据，不构成个股买卖建议。接入实时行情、财报和新闻后，应显示数据源与更新时间。</p>
+          <p>“十倍”只代表研究路径假设，不承诺收益。真实上线前必须接入实时行情、财报、公告、新闻、成交量和更新时间。</p>
         </div>
       </aside>
 
@@ -122,6 +142,8 @@
           <label class="sort-field">
             <span>排序</span>
             <select id="sortInput">
+              <option value="pathScore">十倍路径分</option>
+              <option value="pathMultiple">路径倍数</option>
               <option value="score">综合分</option>
               <option value="momentum">动量</option>
               <option value="quality">质量</option>
@@ -137,10 +159,10 @@
               <tr>
                 <th>代码</th>
                 <th>名称</th>
-                <th>行业</th>
+                <th>阶段</th>
+                <th>路径分</th>
                 <th>综合</th>
-                <th>量化70</th>
-                <th>主观30</th>
+                <th>路径倍数</th>
                 <th>风险</th>
                 <th>状态</th>
               </tr>
@@ -164,15 +186,15 @@
 
         <div class="score-bars" aria-label="评分拆解">
           <div>
-            <span>趋势/动量</span>
+            <span>周期弹性</span>
             <meter id="momentumMeter" min="0" max="100" value="0"></meter>
           </div>
           <div>
-            <span>质量/盈利</span>
+            <span>业绩拐点</span>
             <meter id="qualityMeter" min="0" max="100" value="0"></meter>
           </div>
           <div>
-            <span>估值安全</span>
+            <span>叙事强度</span>
             <meter id="valuationMeter" min="0" max="100" value="0"></meter>
           </div>
           <div>
@@ -181,6 +203,8 @@
           </div>
         </div>
 
+        <div class="path-card" id="pathCard"></div>
+
         <div class="analysis-block">
           <h3>70% 量化层</h3>
           <ul id="quantList"></ul>
@@ -188,6 +212,10 @@
         <div class="analysis-block">
           <h3>30% 主观层</h3>
           <ul id="subjectiveList"></ul>
+        </div>
+        <div class="analysis-block">
+          <h3>十倍路径假设</h3>
+          <ul id="pathList"></ul>
         </div>
         <div class="analysis-block risk-block">
           <h3>风险闸门</h3>
@@ -207,13 +235,24 @@
       <div class="compare-grid" id="compareGrid"></div>
     </section>
 
+    <section class="panel review-panel" aria-label="周期复盘">
+      <div class="panel-head inline-head">
+        <div>
+          <p class="eyebrow">Review</p>
+          <h2>一周期跟踪闸门</h2>
+        </div>
+        <span class="note">只有路径持续被证据支持，才保留在候选池</span>
+      </div>
+      <div class="review-grid" id="reviewGrid"></div>
+    </section>
+
     <figure class="process-visual">
-      <img src="assets/screener-map.svg" alt="条件筛选、量化评分、主观判断和风险闸门组成的选股分析流程" />
+      <img src="assets/screener-map.svg" alt="周期定位、十倍路径、量化评分和风险闸门组成的选股分析流程" />
     </figure>
 
     <footer class="site-foot">
-      <span>仅作研究筛选和复盘，不提供个性化投资建议。</span>
-      <span>真实上线前必须接入可靠数据源、披露更新时间，并保留筛选条件审计记录。</span>
+      <span>仅作十倍候选研究和复盘，不提供个性化投资建议。</span>
+      <span>真实上线前必须接入可靠数据源、披露更新时间、审计筛选条件和模型版本。</span>
     </footer>
   </main>
 
