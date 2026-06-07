@@ -27,9 +27,9 @@ done
 
 curl -fsS "$base_url/app.js" >/dev/null
 curl -fsS "$base_url/styles.css" >/dev/null
-curl -fsS "$base_url/assets/field-map.svg" >/dev/null
+curl -fsS "$base_url/assets/screener-map.svg" >/dev/null
 
-grep -q "造局台" "$html_file"
+grep -q "选股雷达" "$html_file"
 grep -q "styles.css" "$html_file"
 grep -q "app.js" "$html_file"
 

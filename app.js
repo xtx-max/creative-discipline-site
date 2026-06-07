@@ -1,83 +1,313 @@
-const themes = [
+const stocks = [
   {
-    id: 'quant',
-    icon: 'Q',
-    title: '散户量化',
-    note: '把漂亮回测拆成真实约束',
-    idea: '做一个把回测、数据时点、交易成本和样本外结果放在同一屏的自用研究网站。',
-    screen: '第一屏先问“证据够不够”，再展示策略卡片；用户不能绕过数据时点、成本和反方观点。',
-    mvp: ['策略输入表单', '未来函数检查清单', '成本与样本量提示', '复盘记录导出'],
-    review: ['是否用了当时不可见的数据？', '去掉最好结果后还成立吗？', '成本和滑点是否足够保守？'],
+    ticker: 'NVDA',
+    name: 'NVIDIA',
+    market: 'US',
+    sector: 'AI',
+    price: 143.8,
+    momentum: 88,
+    quality: 86,
+    valuationRisk: 78,
+    drawdownRisk: 62,
+    liquidity: 96,
+    growth: 92,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: true,
+    thesis: 'AI 加速计算需求仍强，但估值已经包含较高增长预期。',
+    bear: '若云厂商资本开支放缓或毛利率回落，估值压力会快速放大。',
   },
   {
-    id: 'cash',
-    icon: 'C',
-    title: '现金纪律',
-    note: '把“不操作”做成明确状态',
-    idea: '建立一个现金闸门网站：每天先判断是否应该保持现金，再决定是否进入研究或执行。',
-    screen: '页面顶部只显示三种许可：保持现金、继续研究、允许小规模实验。',
-    mvp: ['现金比例输入', '风险事件开关', '执行许可状态', '不操作理由日志'],
-    review: ['今天为什么不行动？', '风险来自数据、市场还是执行？', '现金纪律有没有被情绪破坏？'],
+    ticker: 'MSFT',
+    name: 'Microsoft',
+    market: 'US',
+    sector: 'AI',
+    price: 468.1,
+    momentum: 74,
+    quality: 91,
+    valuationRisk: 58,
+    drawdownRisk: 42,
+    liquidity: 95,
+    growth: 74,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: true,
+    thesis: '云、AI 助手和企业软件形成高质量复合增长。',
+    bear: 'AI 投入期资本开支高，短期利润率和估值扩张空间受限。',
   },
   {
-    id: 'macro',
-    icon: 'M',
-    title: '宏观风险',
-    note: '黄金、美股、汇率只做背景层',
-    idea: '做一个宏观温度计，把黄金、美股、指数和政策叙事转成风险背景，而不是直接给动作。',
-    screen: '第一屏展示宏观温度、叙事置信度和需要等待的证据。',
-    mvp: ['宏观主题卡', '风险热度滑杆', '反方观点字段', '观察触发器'],
-    review: ['宏观叙事是否可验证？', '哪些证据会推翻它？', '它只影响仓位还是直接影响动作？'],
+    ticker: 'AAPL',
+    name: 'Apple',
+    market: 'US',
+    sector: 'Consumer',
+    price: 203.2,
+    momentum: 55,
+    quality: 88,
+    valuationRisk: 54,
+    drawdownRisk: 38,
+    liquidity: 94,
+    growth: 46,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: false,
+    thesis: '现金流质量和生态粘性强，适合作为质量型观察标的。',
+    bear: '硬件换机周期疲弱时，收入增长弹性不足。',
   },
   {
-    id: 'expert',
-    icon: 'E',
-    title: '高手观点',
-    note: '不崇拜人，只拆观点',
-    idea: '建立一个观点拆解器：把高赞观点拆成假设、证据、执行边界和复盘问题。',
-    screen: '用户粘贴一句观点，网站输出“可验证假设”和“不能直接行动的部分”。',
-    mvp: ['观点输入', '假设拆分', '证据字段', '反方证据字段'],
-    review: ['观点是否能被数据验证？', '作者影响力是否被误当成证据？', '最小实验是什么？'],
+    ticker: 'LLY',
+    name: 'Eli Lilly',
+    market: 'US',
+    sector: 'Healthcare',
+    price: 812.4,
+    momentum: 76,
+    quality: 82,
+    valuationRisk: 73,
+    drawdownRisk: 48,
+    liquidity: 88,
+    growth: 85,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: true,
+    thesis: 'GLP-1 需求和管线预期支撑成长叙事。',
+    bear: '药品定价、产能兑现和竞品数据可能压缩估值。',
   },
   {
-    id: 'system',
-    icon: 'S',
-    title: '独立系统',
-    note: '先做一条闭环，不做大平台',
-    idea: '从一个静态网页开始，把灵感、判断、执行和复盘串成最小闭环。',
-    screen: '第一屏就是工作台：左侧灵感，中间闸门，右侧输出蓝图。',
-    mvp: ['本地静态页面', '可复制蓝图', '状态评分', '路线图'],
-    review: ['这是否一周内能上线？', '哪些字段必须保留？', '哪些功能只是装饰？'],
+    ticker: 'JPM',
+    name: 'JPMorgan Chase',
+    market: 'US',
+    sector: 'Finance',
+    price: 221.7,
+    momentum: 70,
+    quality: 78,
+    valuationRisk: 35,
+    drawdownRisk: 45,
+    liquidity: 90,
+    growth: 52,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: false,
+    thesis: '大型银行资产质量和盈利韧性较强，估值风险相对低。',
+    bear: '经济下行、信贷损失或利率曲线变化会影响利润。',
+  },
+  {
+    ticker: 'XOM',
+    name: 'Exxon Mobil',
+    market: 'US',
+    sector: 'Energy',
+    price: 117.3,
+    momentum: 58,
+    quality: 72,
+    valuationRisk: 38,
+    drawdownRisk: 52,
+    liquidity: 89,
+    growth: 38,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: false,
+    thesis: '现金流和分红回购能力强，适合能源周期配置观察。',
+    bear: '油价下行会直接压缩盈利和资本回报。',
+  },
+  {
+    ticker: 'TSLA',
+    name: 'Tesla',
+    market: 'US',
+    sector: 'EV',
+    price: 188.9,
+    momentum: 43,
+    quality: 54,
+    valuationRisk: 82,
+    drawdownRisk: 86,
+    liquidity: 95,
+    growth: 61,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: true,
+    thesis: '自动驾驶和储能叙事有弹性，但基本面波动大。',
+    bear: '价格战、利润率下滑和估值高波动会放大回撤。',
+  },
+  {
+    ticker: 'ASML',
+    name: 'ASML Holding',
+    market: 'US',
+    sector: 'AI',
+    price: 952.6,
+    momentum: 68,
+    quality: 89,
+    valuationRisk: 66,
+    drawdownRisk: 55,
+    liquidity: 72,
+    growth: 77,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: true,
+    thesis: '先进制程设备稀缺性强，是半导体资本开支核心环节。',
+    bear: '出口限制和晶圆厂资本开支周期会影响订单。',
+  },
+  {
+    ticker: '600519',
+    name: '贵州茅台',
+    market: 'CN',
+    sector: 'Consumer',
+    price: 1580,
+    momentum: 48,
+    quality: 92,
+    valuationRisk: 46,
+    drawdownRisk: 50,
+    liquidity: 78,
+    growth: 42,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: false,
+    thesis: '品牌、渠道和利润率质量高，适合质量因子观察。',
+    bear: '消费景气和高端白酒批价走弱会压制估值。',
+  },
+  {
+    ticker: '00700',
+    name: '腾讯控股',
+    market: 'CN',
+    sector: 'AI',
+    price: 386.4,
+    momentum: 66,
+    quality: 84,
+    valuationRisk: 42,
+    drawdownRisk: 58,
+    liquidity: 82,
+    growth: 62,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: true,
+    thesis: '游戏、广告、云和 AI 应用构成现金流与再增长组合。',
+    bear: '监管、消费和云竞争会影响估值弹性。',
+  },
+  {
+    ticker: '300750',
+    name: '宁德时代',
+    market: 'CN',
+    sector: 'EV',
+    price: 205.6,
+    momentum: 59,
+    quality: 76,
+    valuationRisk: 50,
+    drawdownRisk: 63,
+    liquidity: 81,
+    growth: 64,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: false,
+    thesis: '动力电池龙头地位强，海外储能和技术迭代提供看点。',
+    bear: '产业链价格压力和新能源车增速放缓会影响利润。',
+  },
+  {
+    ticker: 'PDD',
+    name: 'PDD Holdings',
+    market: 'US',
+    sector: 'Consumer',
+    price: 142.5,
+    momentum: 62,
+    quality: 79,
+    valuationRisk: 45,
+    drawdownRisk: 70,
+    liquidity: 86,
+    growth: 88,
+    fcfPositive: true,
+    profitable: true,
+    catalyst: true,
+    thesis: '跨境电商增长快，利润弹性强。',
+    bear: '海外监管、补贴强度和竞争加剧可能影响利润质量。',
   },
 ];
 
-const els = {
-  themeList: document.getElementById('themeList'),
-  ideaText: document.getElementById('ideaText'),
-  evidence: document.getElementById('evidenceInput'),
-  execution: document.getElementById('executionInput'),
-  risk: document.getElementById('riskInput'),
-  evidenceValue: document.getElementById('evidenceValue'),
-  executionValue: document.getElementById('executionValue'),
-  riskValue: document.getElementById('riskValue'),
-  freshData: document.getElementById('freshDataInput'),
-  bearCase: document.getElementById('bearCaseInput'),
-  exitRule: document.getElementById('exitRuleInput'),
-  auditable: document.getElementById('auditableInput'),
-  statePill: document.getElementById('statePill'),
-  verdictBox: document.getElementById('verdictBox'),
-  verdictTitle: document.getElementById('verdictTitle'),
-  verdictText: document.getElementById('verdictText'),
-  screenCopy: document.getElementById('screenCopy'),
-  mvpList: document.getElementById('mvpList'),
-  reviewList: document.getElementById('reviewList'),
-  roadmap: document.getElementById('roadmap'),
-  radar: document.getElementById('radarCanvas'),
-  shuffle: document.getElementById('shuffleBtn'),
-  copy: document.getElementById('copyBtn'),
+const presets = {
+  balanced: {
+    name: '均衡成长',
+    minScore: 68,
+    momentum: 55,
+    quality: 60,
+    valuationRisk: 78,
+    drawdown: 72,
+    positiveCashFlow: true,
+    profitable: true,
+    liquid: true,
+    hasCatalyst: false,
+  },
+  growth: {
+    name: '高成长',
+    minScore: 74,
+    momentum: 62,
+    quality: 55,
+    valuationRisk: 86,
+    drawdown: 78,
+    positiveCashFlow: false,
+    profitable: true,
+    liquid: true,
+    hasCatalyst: true,
+  },
+  quality: {
+    name: '高质量',
+    minScore: 76,
+    momentum: 45,
+    quality: 78,
+    valuationRisk: 68,
+    drawdown: 62,
+    positiveCashFlow: true,
+    profitable: true,
+    liquid: true,
+    hasCatalyst: false,
+  },
+  defensive: {
+    name: '防守低波',
+    minScore: 68,
+    momentum: 40,
+    quality: 68,
+    valuationRisk: 58,
+    drawdown: 55,
+    positiveCashFlow: true,
+    profitable: true,
+    liquid: true,
+    hasCatalyst: false,
+  },
 };
 
-let activeIndex = 0;
+const els = {
+  matchCount: document.getElementById('matchCount'),
+  topScore: document.getElementById('topScore'),
+  strategyName: document.getElementById('strategyName'),
+  dataStamp: document.getElementById('dataStamp'),
+  market: document.getElementById('marketInput'),
+  sector: document.getElementById('sectorInput'),
+  minScore: document.getElementById('minScoreInput'),
+  momentum: document.getElementById('momentumInput'),
+  quality: document.getElementById('qualityInput'),
+  valuationRisk: document.getElementById('valuationRiskInput'),
+  drawdown: document.getElementById('drawdownInput'),
+  minScoreValue: document.getElementById('minScoreValue'),
+  momentumValue: document.getElementById('momentumValue'),
+  qualityValue: document.getElementById('qualityValue'),
+  valuationRiskValue: document.getElementById('valuationRiskValue'),
+  drawdownValue: document.getElementById('drawdownValue'),
+  positiveCashFlow: document.getElementById('positiveCashFlowInput'),
+  profitable: document.getElementById('profitableInput'),
+  liquid: document.getElementById('liquidInput'),
+  hasCatalyst: document.getElementById('hasCatalystInput'),
+  sort: document.getElementById('sortInput'),
+  stockRows: document.getElementById('stockRows'),
+  emptyState: document.getElementById('emptyState'),
+  selectedCard: document.getElementById('selectedCard'),
+  momentumMeter: document.getElementById('momentumMeter'),
+  qualityMeter: document.getElementById('qualityMeter'),
+  valuationMeter: document.getElementById('valuationMeter'),
+  riskMeter: document.getElementById('riskMeter'),
+  quantList: document.getElementById('quantList'),
+  subjectiveList: document.getElementById('subjectiveList'),
+  riskList: document.getElementById('riskList'),
+  compareGrid: document.getElementById('compareGrid'),
+  reset: document.getElementById('resetBtn'),
+  copy: document.getElementById('copyBtn'),
+  tabs: Array.from(document.querySelectorAll('.tab-btn')),
+};
+
+let selectedTicker = stocks[0].ticker;
+let activePreset = 'balanced';
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -89,184 +319,282 @@ function escapeHtml(value) {
   }[ch]));
 }
 
-function scoreState() {
-  const evidence = Number(els.evidence.value);
-  const execution = Number(els.execution.value);
-  const risk = Number(els.risk.value);
-  const checks = [els.freshData, els.bearCase, els.exitRule, els.auditable].filter(item => item.checked).length;
-  const score = Math.round(evidence * 0.38 + execution * 0.34 + (100 - risk) * 0.18 + checks * 2.5);
-  if (score >= 78 && risk <= 45 && checks >= 3) {
-    return { key: 'ship', label: '允许成稿', title: '可以做成第一版', text: '证据、执行和复盘条件基本齐备，下一步应收敛到一屏可用的最小版本。' };
-  }
-  if (score >= 62 && checks >= 2) {
-    return { key: 'probe', label: '继续打磨', title: '先做研究稿', text: '方向有价值，但还需要补足反方观点、退出条件或可验证证据。' };
-  }
-  if (risk >= 68) {
-    return { key: 'stop', label: '暂停输出', title: '叙事风险过高', text: '当前想法更像观点冲动，不适合直接发布成产品或行动建议。' };
-  }
-  return { key: 'hold', label: '保留观察', title: '先存入灵感池', text: '想法可以留下，但还不够清晰；先记录触发条件，等证据更强再推进。' };
+function clamp(value, min = 0, max = 100) {
+  return Math.max(min, Math.min(max, value));
 }
 
-function renderThemes() {
-  els.themeList.innerHTML = themes.map((theme, index) => `
-    <button class="theme-button" type="button" data-index="${index}" aria-pressed="${index === activeIndex}">
-      <span class="theme-icon" aria-hidden="true">${escapeHtml(theme.icon)}</span>
-      <span>
-        <b>${escapeHtml(theme.title)}</b>
-        <span>${escapeHtml(theme.note)}</span>
-      </span>
-    </button>
+function scoreStock(stock) {
+  const valuationSafety = 100 - stock.valuationRisk;
+  const riskSafety = 100 - stock.drawdownRisk;
+  const quant = Math.round(
+    stock.momentum * 0.22 +
+    stock.quality * 0.2 +
+    valuationSafety * 0.14 +
+    riskSafety * 0.14 +
+    stock.liquidity * 0.12 +
+    stock.growth * 0.18
+  );
+  const subjective = Math.round(
+    stock.growth * 0.42 +
+    (stock.catalyst ? 88 : 52) * 0.28 +
+    stock.quality * 0.18 +
+    riskSafety * 0.12
+  );
+  const score = Math.round(quant * 0.7 + subjective * 0.3);
+  return { score, quant, subjective, valuationSafety, riskSafety };
+}
+
+function labelFor(stock, score) {
+  if (stock.drawdownRisk >= 78 || stock.valuationRisk >= 82) return '高风险观察';
+  if (score >= 82) return '重点研究';
+  if (score >= 74) return '候选';
+  if (score >= 66) return '观察';
+  return '剔除';
+}
+
+function riskClass(stock) {
+  if (stock.drawdownRisk >= 78 || stock.valuationRisk >= 80) return 'danger';
+  if (stock.drawdownRisk >= 62 || stock.valuationRisk >= 68) return 'warn';
+  return 'ok';
+}
+
+function getFilters() {
+  return {
+    market: els.market.value,
+    sector: els.sector.value,
+    minScore: Number(els.minScore.value),
+    momentum: Number(els.momentum.value),
+    quality: Number(els.quality.value),
+    valuationRisk: Number(els.valuationRisk.value),
+    drawdown: Number(els.drawdown.value),
+    positiveCashFlow: els.positiveCashFlow.checked,
+    profitable: els.profitable.checked,
+    liquid: els.liquid.checked,
+    hasCatalyst: els.hasCatalyst.checked,
+    sort: els.sort.value,
+  };
+}
+
+function enrichedStocks() {
+  return stocks.map(stock => ({ ...stock, ...scoreStock(stock) }));
+}
+
+function passesFilters(stock, filters) {
+  if (filters.market !== 'all' && stock.market !== filters.market) return false;
+  if (filters.sector !== 'all' && stock.sector !== filters.sector) return false;
+  if (stock.score < filters.minScore) return false;
+  if (stock.momentum < filters.momentum) return false;
+  if (stock.quality < filters.quality) return false;
+  if (stock.valuationRisk > filters.valuationRisk) return false;
+  if (stock.drawdownRisk > filters.drawdown) return false;
+  if (filters.positiveCashFlow && !stock.fcfPositive) return false;
+  if (filters.profitable && !stock.profitable) return false;
+  if (filters.liquid && stock.liquidity < 70) return false;
+  if (filters.hasCatalyst && !stock.catalyst) return false;
+  return true;
+}
+
+function sortStocks(list, sortKey) {
+  return [...list].sort((a, b) => {
+    if (sortKey === 'momentum') return b.momentum - a.momentum;
+    if (sortKey === 'quality') return b.quality - a.quality;
+    if (sortKey === 'risk') return a.drawdownRisk - b.drawdownRisk;
+    if (sortKey === 'valuation') return a.valuationRisk - b.valuationRisk;
+    return b.score - a.score;
+  });
+}
+
+function formatPrice(stock) {
+  const prefix = stock.market === 'US' ? '$' : '¥/HK$ ';
+  return `${prefix}${stock.price.toFixed(stock.price > 1000 ? 0 : 1)}`;
+}
+
+function renderRows(list) {
+  els.stockRows.innerHTML = list.map(stock => `
+    <tr class="${stock.ticker === selectedTicker ? 'selected' : ''}" data-ticker="${escapeHtml(stock.ticker)}">
+      <td><button class="ticker-btn" type="button">${escapeHtml(stock.ticker)}</button></td>
+      <td>${escapeHtml(stock.name)}</td>
+      <td>${escapeHtml(stock.sector)}</td>
+      <td><strong>${stock.score}</strong></td>
+      <td>${stock.quant}</td>
+      <td>${stock.subjective}</td>
+      <td><span class="risk-pill ${riskClass(stock)}">${stock.drawdownRisk}</span></td>
+      <td>${escapeHtml(labelFor(stock, stock.score))}</td>
+    </tr>
   `).join('');
 }
 
-function classForState(key) {
-  if (key === 'ship') return '';
-  return key;
+function renderSelected(stock) {
+  const label = labelFor(stock, stock.score);
+  els.selectedCard.innerHTML = `
+    <div>
+      <span class="market-tag">${escapeHtml(stock.market)}</span>
+      <h3>${escapeHtml(stock.ticker)} ${escapeHtml(stock.name)}</h3>
+      <p>${escapeHtml(stock.sector)} · ${formatPrice(stock)}</p>
+    </div>
+    <strong>${stock.score}</strong>
+    <span class="status-line">${escapeHtml(label)}</span>
+  `;
+  els.momentumMeter.value = stock.momentum;
+  els.qualityMeter.value = stock.quality;
+  els.valuationMeter.value = stock.valuationSafety;
+  els.riskMeter.value = stock.riskSafety;
+  els.quantList.innerHTML = [
+    `趋势/动量：${stock.momentum}，${stock.momentum >= 70 ? '价格强势明确' : '趋势证据一般'}`,
+    `质量/盈利：${stock.quality}，${stock.profitable ? '盈利状态通过' : '盈利状态未通过'}`,
+    `估值风险：${stock.valuationRisk}，${stock.valuationRisk <= 60 ? '估值压力可控' : '估值压力偏高'}`,
+    `流动性：${stock.liquidity}，${stock.liquidity >= 70 ? '交易容量通过' : '流动性不足'}`,
+  ].map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  els.subjectiveList.innerHTML = [
+    `长期逻辑：${stock.thesis}`,
+    `催化剂：${stock.catalyst ? '存在近期催化剂，需要跟踪兑现节奏' : '缺少明确短期催化剂，更适合观察'}`,
+    `反方观点：${stock.bear}`,
+  ].map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  els.riskList.innerHTML = [
+    `最大仓位建议：单票不超过自定义组合上限，未做适当性评估前不输出买入指令。`,
+    `触发复查：综合分跌破 ${Math.max(60, stock.score - 10)}、回撤风险升至 75 以上、或核心逻辑被财报/新闻证伪。`,
+    `数据缺口：当前为示例静态数据，真实使用必须接入行情、财报、公告和新闻更新时间。`,
+  ].map(item => `<li>${escapeHtml(item)}</li>`).join('');
 }
 
-function renderLists(theme) {
-  els.mvpList.innerHTML = theme.mvp.map(item => `<li>${escapeHtml(item)}</li>`).join('');
-  els.reviewList.innerHTML = theme.review.map(item => `<li>${escapeHtml(item)}</li>`).join('');
-  const steps = [
-    ['01', '定题', '把收藏主题改写成一个明确用户场景。'],
-    ['02', '闸门', '补齐数据时点、反方观点、退出条件。'],
-    ['03', '首屏', '只做一个可用工作台，不做营销页。'],
-    ['04', '复盘', '上线后记录判断是否被证据支持。'],
-  ];
-  els.roadmap.innerHTML = steps.map(step => `
-    <article class="roadmap-step">
-      <span>${step[0]}</span>
-      <b>${escapeHtml(step[1])}</b>
-      <p>${escapeHtml(step[2])}</p>
+function renderCompare(list) {
+  const top = list.slice(0, 5);
+  els.compareGrid.innerHTML = top.map(stock => `
+    <article class="compare-card">
+      <div>
+        <b>${escapeHtml(stock.ticker)}</b>
+        <span>${escapeHtml(stock.name)}</span>
+      </div>
+      <div class="mini-bars">
+        <span style="--w:${stock.score}%"><i>综合 ${stock.score}</i></span>
+        <span style="--w:${stock.momentum}%"><i>动量 ${stock.momentum}</i></span>
+        <span style="--w:${stock.quality}%"><i>质量 ${stock.quality}</i></span>
+      </div>
     </article>
   `).join('');
 }
 
-function drawRadar() {
-  const canvas = els.radar;
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width;
-  const height = canvas.height;
-  ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = '#fbfcff';
-  ctx.fillRect(0, 0, width, height);
-
-  const labels = ['证据', '执行', '复盘', '反方', '克制'];
-  const values = [
-    Number(els.evidence.value),
-    Number(els.execution.value),
-    els.auditable.checked ? 82 : 38,
-    els.bearCase.checked ? 78 : 32,
-    100 - Number(els.risk.value),
-  ];
-  const cx = width / 2;
-  const cy = height / 2 + 8;
-  const radius = 92;
-  const angle = Math.PI * 2 / labels.length;
-
-  ctx.strokeStyle = '#d9dee8';
-  ctx.lineWidth = 1;
-  for (let ring = 1; ring <= 4; ring += 1) {
-    ctx.beginPath();
-    labels.forEach((_, index) => {
-      const r = radius * ring / 4;
-      const x = cx + Math.cos(index * angle - Math.PI / 2) * r;
-      const y = cy + Math.sin(index * angle - Math.PI / 2) * r;
-      if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-    ctx.closePath();
-    ctx.stroke();
-  }
-
-  ctx.beginPath();
-  values.forEach((value, index) => {
-    const r = radius * value / 100;
-    const x = cx + Math.cos(index * angle - Math.PI / 2) * r;
-    const y = cy + Math.sin(index * angle - Math.PI / 2) * r;
-    if (index === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  ctx.closePath();
-  ctx.fillStyle = 'rgba(14,124,102,.18)';
-  ctx.strokeStyle = '#0e7c66';
-  ctx.lineWidth = 2;
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.fillStyle = '#475467';
-  ctx.font = '13px -apple-system, BlinkMacSystemFont, sans-serif';
-  labels.forEach((label, index) => {
-    const x = cx + Math.cos(index * angle - Math.PI / 2) * (radius + 28);
-    const y = cy + Math.sin(index * angle - Math.PI / 2) * (radius + 28);
-    ctx.textAlign = x < cx - 8 ? 'right' : x > cx + 8 ? 'left' : 'center';
-    ctx.fillText(label, x, y);
-  });
+function updateLabels() {
+  els.minScoreValue.textContent = els.minScore.value;
+  els.momentumValue.textContent = els.momentum.value;
+  els.qualityValue.textContent = els.quality.value;
+  els.valuationRiskValue.textContent = els.valuationRisk.value;
+  els.drawdownValue.textContent = els.drawdown.value;
+  els.strategyName.textContent = presets[activePreset]?.name ?? '自定义';
+  els.dataStamp.textContent = '示例数据 2026-06-08';
 }
 
 function render() {
-  const theme = themes[activeIndex];
-  const state = scoreState();
-  els.evidenceValue.textContent = els.evidence.value;
-  els.executionValue.textContent = els.execution.value;
-  els.riskValue.textContent = els.risk.value;
-  els.statePill.textContent = state.label;
-  els.statePill.className = `state-pill ${classForState(state.key)}`;
-  els.verdictBox.className = `verdict ${classForState(state.key)}`;
-  els.verdictTitle.textContent = state.title;
-  els.verdictText.textContent = state.text;
-  els.screenCopy.textContent = theme.screen;
-  renderThemes();
-  renderLists(theme);
-  drawRadar();
+  updateLabels();
+  const filters = getFilters();
+  const list = sortStocks(enrichedStocks().filter(stock => passesFilters(stock, filters)), filters.sort);
+  if (!list.some(stock => stock.ticker === selectedTicker)) {
+    selectedTicker = list[0]?.ticker ?? stocks[0].ticker;
+  }
+  const selected = enrichedStocks().find(stock => stock.ticker === selectedTicker) ?? enrichedStocks()[0];
+  els.matchCount.textContent = list.length;
+  els.topScore.textContent = list[0]?.score ?? 0;
+  els.emptyState.hidden = list.length > 0;
+  renderRows(list);
+  renderSelected(selected);
+  renderCompare(list);
 }
 
-function setTheme(index) {
-  activeIndex = index;
-  els.ideaText.value = themes[activeIndex].idea;
+function applyPreset(key) {
+  activePreset = key;
+  const preset = presets[key];
+  els.minScore.value = preset.minScore;
+  els.momentum.value = preset.momentum;
+  els.quality.value = preset.quality;
+  els.valuationRisk.value = preset.valuationRisk;
+  els.drawdown.value = preset.drawdown;
+  els.positiveCashFlow.checked = preset.positiveCashFlow;
+  els.profitable.checked = preset.profitable;
+  els.liquid.checked = preset.liquid;
+  els.hasCatalyst.checked = preset.hasCatalyst;
+  els.tabs.forEach(tab => tab.setAttribute('aria-pressed', String(tab.dataset.preset === key)));
   render();
 }
 
-function blueprintText() {
-  const theme = themes[activeIndex];
-  const state = scoreState();
+function analysisText() {
+  const stock = enrichedStocks().find(item => item.ticker === selectedTicker) ?? enrichedStocks()[0];
   return [
-    `主题：${theme.title}`,
-    `当前想法：${els.ideaText.value.trim()}`,
-    `创作许可：${state.title}`,
-    `第一屏：${theme.screen}`,
-    `最小版本：${theme.mvp.join('；')}`,
-    `复盘问题：${theme.review.join('；')}`,
+    `标的/主题：${stock.ticker} ${stock.name}`,
+    '数据时点：示例静态数据 2026-06-08',
+    '适用对象假设：仅用于研究筛选，不构成个性化投资建议',
+    '',
+    `量化评分70：${stock.quant}`,
+    `- 趋势/动量：${stock.momentum}`,
+    `- 估值/质量：质量 ${stock.quality}；估值风险 ${stock.valuationRisk}`,
+    `- 波动/回撤：回撤风险 ${stock.drawdownRisk}`,
+    `- 流动性/交易成本：${stock.liquidity}`,
+    '',
+    `主观评分30：${stock.subjective}`,
+    `- 长期逻辑：${stock.thesis}`,
+    `- 催化剂：${stock.catalyst ? '有' : '无明确短期催化剂'}`,
+    `- 反方观点：${stock.bear}`,
+    '',
+    `最终状态：${labelFor(stock, stock.score)}`,
+    '建议动作：进入研究清单；真实交易前必须更新行情、财报、新闻和个人风险约束。',
+    '仓位/风控：未做适当性评估前不输出买入仓位；单票需设置最大损失和复查触发器。',
   ].join('\n');
 }
 
-els.themeList.addEventListener('click', event => {
-  const button = event.target.closest('[data-index]');
-  if (!button) return;
-  setTheme(Number(button.dataset.index));
+[
+  els.market,
+  els.sector,
+  els.minScore,
+  els.momentum,
+  els.quality,
+  els.valuationRisk,
+  els.drawdown,
+  els.positiveCashFlow,
+  els.profitable,
+  els.liquid,
+  els.hasCatalyst,
+  els.sort,
+].forEach(input => {
+  input.addEventListener('input', () => {
+    activePreset = 'custom';
+    els.tabs.forEach(tab => tab.setAttribute('aria-pressed', 'false'));
+    render();
+  });
+  input.addEventListener('change', () => {
+    activePreset = 'custom';
+    els.tabs.forEach(tab => tab.setAttribute('aria-pressed', 'false'));
+    render();
+  });
 });
 
-[els.evidence, els.execution, els.risk, els.freshData, els.bearCase, els.exitRule, els.auditable].forEach(input => {
-  input.addEventListener('input', render);
-  input.addEventListener('change', render);
+els.stockRows.addEventListener('click', event => {
+  const row = event.target.closest('[data-ticker]');
+  if (!row) return;
+  selectedTicker = row.dataset.ticker;
+  render();
 });
 
-els.ideaText.addEventListener('input', render);
+els.tabs.forEach(tab => {
+  tab.addEventListener('click', () => applyPreset(tab.dataset.preset));
+});
 
-els.shuffle.addEventListener('click', () => {
-  setTheme((activeIndex + 1) % themes.length);
+els.reset.addEventListener('click', () => {
+  els.market.value = 'all';
+  els.sector.value = 'all';
+  els.sort.value = 'score';
+  selectedTicker = stocks[0].ticker;
+  applyPreset('balanced');
 });
 
 els.copy.addEventListener('click', async () => {
   try {
-    await navigator.clipboard.writeText(blueprintText());
-    els.copy.innerHTML = '<span aria-hidden="true">✓</span>已复制';
+    await navigator.clipboard.writeText(analysisText());
+    els.copy.textContent = '已复制';
     setTimeout(() => {
-      els.copy.innerHTML = '<span aria-hidden="true">⎘</span>复制蓝图';
+      els.copy.textContent = '复制分析';
     }, 1400);
   } catch (_) {
-    els.copy.innerHTML = '<span aria-hidden="true">!</span>复制失败';
+    els.copy.textContent = '复制失败';
   }
 });
 
-setTheme(0);
+applyPreset('balanced');

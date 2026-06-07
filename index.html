@@ -3,116 +3,217 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>造局台 | 灵感到执行蓝图</title>
+  <title>选股雷达 | 条件筛选与分析工作台</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="workspace">
+  <main class="app-shell">
     <header class="topbar">
-      <a class="brand" href="./" aria-label="造局台首页">
-        <span class="brand-mark">创</span>
+      <a class="brand" href="./" aria-label="选股雷达首页">
+        <span class="brand-mark">股</span>
         <span>
-          <strong>造局台</strong>
-          <small>Idea Discipline Studio</small>
+          <strong>选股雷达</strong>
+          <small>Stock Screening & Analysis</small>
         </span>
       </a>
       <div class="top-actions">
-        <button class="ghost-btn" id="shuffleBtn" type="button"><span aria-hidden="true">↻</span>换一个方向</button>
-        <button class="primary-btn" id="copyBtn" type="button"><span aria-hidden="true">⎘</span>复制蓝图</button>
+        <button class="ghost-btn" id="resetBtn" type="button">重置条件</button>
+        <button class="primary-btn" id="copyBtn" type="button">复制分析</button>
       </div>
     </header>
 
-    <section class="studio-grid" aria-label="创作工作台">
-      <aside class="panel inspiration-panel">
+    <section class="summary-strip" aria-label="筛选概览">
+      <article>
+        <span>通过数量</span>
+        <strong id="matchCount">0</strong>
+      </article>
+      <article>
+        <span>最高综合分</span>
+        <strong id="topScore">0</strong>
+      </article>
+      <article>
+        <span>当前策略</span>
+        <strong id="strategyName">均衡成长</strong>
+      </article>
+      <article>
+        <span>数据时点</span>
+        <strong id="dataStamp">示例数据</strong>
+      </article>
+    </section>
+
+    <section class="workspace" aria-label="选股工作台">
+      <aside class="panel filter-panel">
         <div class="panel-head">
-          <p class="eyebrow">Source</p>
-          <h1>收藏主题</h1>
-        </div>
-        <div class="theme-list" id="themeList"></div>
-        <figure class="map-visual">
-          <img src="assets/field-map.svg" alt="灵感、证据、执行和复盘构成的判断地图" />
-        </figure>
-      </aside>
-
-      <section class="panel build-panel">
-        <div class="panel-head inline-head">
-          <div>
-            <p class="eyebrow">Build</p>
-            <h2>创作闸门</h2>
-          </div>
-          <span class="state-pill" id="statePill">读取中</span>
+          <p class="eyebrow">Screen</p>
+          <h1>选股条件</h1>
         </div>
 
-        <label class="idea-input">
-          <span>当前想法</span>
-          <textarea id="ideaText" rows="4"></textarea>
+        <label class="field">
+          <span>市场</span>
+          <select id="marketInput">
+            <option value="all">全部市场</option>
+            <option value="US">美股</option>
+            <option value="CN">A股/港股</option>
+          </select>
         </label>
 
-        <div class="control-grid">
-          <label class="slider-line">
-            <span>证据强度 <b id="evidenceValue">70</b></span>
-            <input id="evidenceInput" type="range" min="0" max="100" value="70" />
+        <label class="field">
+          <span>行业</span>
+          <select id="sectorInput">
+            <option value="all">全部行业</option>
+            <option value="AI">AI/半导体</option>
+            <option value="Consumer">消费</option>
+            <option value="Healthcare">医药</option>
+            <option value="Energy">能源/材料</option>
+            <option value="Finance">金融</option>
+            <option value="EV">新能源车</option>
+          </select>
+        </label>
+
+        <div class="slider-stack">
+          <label class="slider-field">
+            <span>最低综合分 <b id="minScoreValue">68</b></span>
+            <input id="minScoreInput" type="range" min="40" max="95" value="68" />
           </label>
-          <label class="slider-line">
-            <span>执行清晰度 <b id="executionValue">68</b></span>
-            <input id="executionInput" type="range" min="0" max="100" value="68" />
+          <label class="slider-field">
+            <span>最低动量 <b id="momentumValue">55</b></span>
+            <input id="momentumInput" type="range" min="0" max="100" value="55" />
           </label>
-          <label class="slider-line">
-            <span>叙事风险 <b id="riskValue">38</b></span>
-            <input id="riskInput" type="range" min="0" max="100" value="38" />
+          <label class="slider-field">
+            <span>最低质量 <b id="qualityValue">60</b></span>
+            <input id="qualityInput" type="range" min="0" max="100" value="60" />
+          </label>
+          <label class="slider-field">
+            <span>最高估值风险 <b id="valuationRiskValue">78</b></span>
+            <input id="valuationRiskInput" type="range" min="20" max="100" value="78" />
+          </label>
+          <label class="slider-field">
+            <span>最高回撤风险 <b id="drawdownValue">72</b></span>
+            <input id="drawdownInput" type="range" min="20" max="100" value="72" />
           </label>
         </div>
 
         <div class="check-grid">
-          <label><input id="freshDataInput" type="checkbox" checked /> 数据时点明确</label>
-          <label><input id="bearCaseInput" type="checkbox" checked /> 有反方观点</label>
-          <label><input id="exitRuleInput" type="checkbox" /> 有退出条件</label>
-          <label><input id="auditableInput" type="checkbox" checked /> 能复盘验证</label>
+          <label><input id="positiveCashFlowInput" type="checkbox" checked /> 自由现金流为正</label>
+          <label><input id="profitableInput" type="checkbox" checked /> 已盈利</label>
+          <label><input id="liquidInput" type="checkbox" checked /> 流动性充足</label>
+          <label><input id="hasCatalystInput" type="checkbox" /> 近期催化剂</label>
         </div>
 
-        <div class="radar-wrap">
-          <canvas id="radarCanvas" width="720" height="260" aria-label="证据雷达图"></canvas>
+        <div class="strategy-tabs" role="tablist" aria-label="策略预设">
+          <button class="tab-btn" type="button" data-preset="balanced" aria-pressed="true">均衡</button>
+          <button class="tab-btn" type="button" data-preset="growth" aria-pressed="false">成长</button>
+          <button class="tab-btn" type="button" data-preset="quality" aria-pressed="false">质量</button>
+          <button class="tab-btn" type="button" data-preset="defensive" aria-pressed="false">防守</button>
+        </div>
+
+        <div class="disclosure-box">
+          <strong>边界</strong>
+          <p>当前为静态网站示例数据，不构成个股买卖建议。接入实时行情、财报和新闻后，应显示数据源与更新时间。</p>
+        </div>
+      </aside>
+
+      <section class="panel result-panel">
+        <div class="panel-head inline-head">
+          <div>
+            <p class="eyebrow">Ranking</p>
+            <h2>候选股票</h2>
+          </div>
+          <label class="sort-field">
+            <span>排序</span>
+            <select id="sortInput">
+              <option value="score">综合分</option>
+              <option value="momentum">动量</option>
+              <option value="quality">质量</option>
+              <option value="risk">风险低优先</option>
+              <option value="valuation">估值风险低优先</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>代码</th>
+                <th>名称</th>
+                <th>行业</th>
+                <th>综合</th>
+                <th>量化70</th>
+                <th>主观30</th>
+                <th>风险</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody id="stockRows"></tbody>
+          </table>
+        </div>
+
+        <div class="empty-state" id="emptyState" hidden>
+          没有股票满足当前条件。降低最低分、放宽回撤或估值风险后再筛。
         </div>
       </section>
 
-      <aside class="panel output-panel">
+      <aside class="panel analysis-panel">
         <div class="panel-head">
-          <p class="eyebrow">Output</p>
-          <h2>执行蓝图</h2>
+          <p class="eyebrow">Analysis</p>
+          <h2>个股分析</h2>
         </div>
-        <div class="verdict" id="verdictBox">
-          <span>创作许可</span>
-          <strong id="verdictTitle">读取中</strong>
-          <p id="verdictText"></p>
+
+        <div class="selected-card" id="selectedCard"></div>
+
+        <div class="score-bars" aria-label="评分拆解">
+          <div>
+            <span>趋势/动量</span>
+            <meter id="momentumMeter" min="0" max="100" value="0"></meter>
+          </div>
+          <div>
+            <span>质量/盈利</span>
+            <meter id="qualityMeter" min="0" max="100" value="0"></meter>
+          </div>
+          <div>
+            <span>估值安全</span>
+            <meter id="valuationMeter" min="0" max="100" value="0"></meter>
+          </div>
+          <div>
+            <span>风险控制</span>
+            <meter id="riskMeter" min="0" max="100" value="0"></meter>
+          </div>
         </div>
-        <div class="blueprint">
-          <section>
-            <h3>第一屏</h3>
-            <p id="screenCopy"></p>
-          </section>
-          <section>
-            <h3>最小版本</h3>
-            <ul id="mvpList"></ul>
-          </section>
-          <section>
-            <h3>复盘问题</h3>
-            <ul id="reviewList"></ul>
-          </section>
+
+        <div class="analysis-block">
+          <h3>70% 量化层</h3>
+          <ul id="quantList"></ul>
+        </div>
+        <div class="analysis-block">
+          <h3>30% 主观层</h3>
+          <ul id="subjectiveList"></ul>
+        </div>
+        <div class="analysis-block risk-block">
+          <h3>风险闸门</h3>
+          <ul id="riskList"></ul>
         </div>
       </aside>
     </section>
 
-    <section class="roadmap-band" aria-label="发布路线">
-      <div class="roadmap-head">
-        <p class="eyebrow">Ship</p>
-        <h2>从灵感到上线</h2>
+    <section class="panel compare-panel" aria-label="候选对比">
+      <div class="panel-head inline-head">
+        <div>
+          <p class="eyebrow">Compare</p>
+          <h2>前五候选对比</h2>
+        </div>
+        <span class="note">分数越高越好，风险项越低越好</span>
       </div>
-      <div class="roadmap" id="roadmap"></div>
+      <div class="compare-grid" id="compareGrid"></div>
     </section>
 
+    <figure class="process-visual">
+      <img src="assets/screener-map.svg" alt="条件筛选、量化评分、主观判断和风险闸门组成的选股分析流程" />
+    </figure>
+
     <footer class="site-foot">
-      <span>自用研究与创作工具</span>
-      <span>不输出个股买卖建议，不替代法律、财务或投资顾问意见。</span>
+      <span>仅作研究筛选和复盘，不提供个性化投资建议。</span>
+      <span>真实上线前必须接入可靠数据源、披露更新时间，并保留筛选条件审计记录。</span>
     </footer>
   </main>
 
