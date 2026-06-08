@@ -149,7 +149,7 @@ a {
 
 .workspace {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr) 360px;
+  grid-template-columns: 300px minmax(0, 1fr) 340px;
   gap: 14px;
   align-items: start;
 }
@@ -349,7 +349,7 @@ textarea:focus {
 
 table {
   width: 100%;
-  min-width: 680px;
+  min-width: 700px;
   border-collapse: collapse;
   background: #fff;
 }
@@ -357,7 +357,7 @@ table {
 th,
 td {
   border-bottom: 1px solid var(--line);
-  padding: 11px 8px;
+  padding: 10px 7px;
   text-align: left;
   font-size: 13px;
   white-space: nowrap;
@@ -389,6 +389,7 @@ tr.selected {
 }
 
 .risk-pill,
+.quality-pill,
 .market-tag,
 .status-line {
   display: inline-flex;
@@ -412,6 +413,33 @@ tr.selected {
 
 .risk-pill.danger {
   color: var(--red);
+  background: rgba(189, 61, 53, .12);
+}
+
+.quality-pill.ok,
+.quality-card strong.ok {
+  color: var(--green);
+}
+
+.quality-pill.warn,
+.quality-card strong.warn {
+  color: var(--amber);
+}
+
+.quality-pill.danger,
+.quality-card strong.danger {
+  color: var(--red);
+}
+
+.quality-pill.ok {
+  background: rgba(11, 122, 91, .1);
+}
+
+.quality-pill.warn {
+  background: rgba(168, 105, 0, .12);
+}
+
+.quality-pill.danger {
   background: rgba(189, 61, 53, .12);
 }
 
@@ -529,6 +557,169 @@ meter {
 
 .risk-block h3 {
   color: var(--red);
+}
+
+.quality-card {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.quality-card div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+
+.quality-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.quality-card strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.ops-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.ops-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ops-actions button {
+  flex: 1;
+}
+
+.watchlist-list,
+.journal-list {
+  display: grid;
+  gap: 10px;
+}
+
+.empty-inline {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  color: var(--muted);
+  background: #fff;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.watch-item,
+.journal-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+}
+
+.watch-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+}
+
+.watch-item.active {
+  border-color: rgba(38, 90, 155, .45);
+  background: rgba(38, 90, 155, .05);
+}
+
+.watch-item button[data-watch-select] {
+  border: 0;
+  padding: 0;
+  color: var(--ink);
+  background: transparent;
+  text-align: left;
+}
+
+.watch-item b,
+.watch-item span,
+.watch-item small {
+  display: block;
+}
+
+.watch-item button span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.watch-item div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.watch-item div span {
+  border-radius: 999px;
+  padding: 3px 7px;
+  color: #344054;
+  background: #edf1f6;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.watch-item small {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.remove-btn {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 9px;
+  color: var(--red);
+  background: #fff;
+  font-size: 12px;
+}
+
+.journal-form {
+  display: grid;
+  gap: 10px;
+}
+
+.journal-status {
+  margin: -3px 0 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.journal-item div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.journal-item time,
+.journal-item span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.journal-item p {
+  margin: 8px 0;
+  color: #344054;
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .compare-panel {
@@ -654,6 +845,10 @@ meter {
     grid-column: 1 / -1;
   }
 
+  .ops-grid {
+    grid-template-columns: 1fr;
+  }
+
   .compare-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -678,8 +873,10 @@ meter {
   .top-actions,
   .summary-strip,
   .workspace,
+  .ops-grid,
   .compare-grid,
   .path-card,
+  .quality-card,
   .review-grid {
     grid-template-columns: 1fr;
   }

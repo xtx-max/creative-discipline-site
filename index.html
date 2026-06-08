@@ -118,6 +118,7 @@
           <label><input id="liquidInput" type="checkbox" checked /> 流动性充足</label>
           <label><input id="hasCatalystInput" type="checkbox" /> 近期催化剂</label>
           <label><input id="tenXGateInput" type="checkbox" checked /> 十倍路径可解释</label>
+          <label><input id="qualityGateInput" type="checkbox" /> 数据质量达标</label>
         </div>
 
         <div class="strategy-tabs" role="tablist" aria-label="策略预设">
@@ -174,6 +175,7 @@
                 <th>综合</th>
                 <th>路径倍数</th>
                 <th>风险</th>
+                <th>数据</th>
                 <th>状态</th>
               </tr>
             </thead>
@@ -231,7 +233,61 @@
           <h3>风险闸门</h3>
           <ul id="riskList"></ul>
         </div>
+        <div class="analysis-block quality-block">
+          <h3>数据质量</h3>
+          <div class="quality-card" id="qualityCard"></div>
+          <ul id="qualityList"></ul>
+        </div>
       </aside>
+    </section>
+
+    <section class="ops-grid" aria-label="研究工作流">
+      <section class="panel watchlist-panel">
+        <div class="panel-head inline-head">
+          <div>
+            <p class="eyebrow">Research Pool</p>
+            <h2>研究清单</h2>
+          </div>
+          <span class="note">保存在本机浏览器</span>
+        </div>
+        <div class="ops-actions">
+          <button class="primary-btn" id="watchlistBtn" type="button">加入研究清单</button>
+          <button class="ghost-btn" id="clearWatchlistBtn" type="button">清空清单</button>
+        </div>
+        <div class="watchlist-list" id="watchlistRows"></div>
+      </section>
+
+      <section class="panel journal-panel">
+        <div class="panel-head inline-head">
+          <div>
+            <p class="eyebrow">Decision Journal</p>
+            <h2>决策日志</h2>
+          </div>
+          <span class="note">记录假设、证据和反方观点</span>
+        </div>
+        <div class="journal-form">
+          <label class="field">
+            <span>研究状态</span>
+            <select id="journalLabelInput">
+              <option value="观察">观察</option>
+              <option value="候选池">候选池</option>
+              <option value="降级">降级</option>
+              <option value="剔除">剔除</option>
+              <option value="复盘">复盘</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>本次判断</span>
+            <textarea id="journalNoteInput" rows="4" placeholder="写下本次保留、降级或剔除的原因。必须包含证据和反方风险。"></textarea>
+          </label>
+          <div class="ops-actions">
+            <button class="primary-btn" id="saveJournalBtn" type="button">保存日志</button>
+            <button class="ghost-btn" id="exportJournalBtn" type="button">复制日志</button>
+          </div>
+          <p class="journal-status" id="journalStatus">暂无日志。</p>
+        </div>
+        <div class="journal-list" id="journalRows"></div>
+      </section>
     </section>
 
     <section class="panel compare-panel" aria-label="候选对比">

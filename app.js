@@ -381,6 +381,7 @@ const presets = {
     liquid: true,
     hasCatalyst: true,
     tenXGate: true,
+    qualityGate: false,
   },
   inflection: {
     name: '早期拐点',
@@ -396,6 +397,7 @@ const presets = {
     liquid: true,
     hasCatalyst: false,
     tenXGate: false,
+    qualityGate: false,
   },
   quality: {
     name: '质量十倍',
@@ -411,6 +413,7 @@ const presets = {
     liquid: true,
     hasCatalyst: false,
     tenXGate: false,
+    qualityGate: false,
   },
   defensive: {
     name: '防守观察',
@@ -426,6 +429,7 @@ const presets = {
     liquid: true,
     hasCatalyst: false,
     tenXGate: false,
+    qualityGate: false,
   },
 };
 
@@ -456,6 +460,7 @@ const els = {
   liquid: document.getElementById('liquidInput'),
   hasCatalyst: document.getElementById('hasCatalystInput'),
   tenXGate: document.getElementById('tenXGateInput'),
+  qualityGate: document.getElementById('qualityGateInput'),
   dataInput: document.getElementById('dataInput'),
   importBtn: document.getElementById('importBtn'),
   sampleBtn: document.getElementById('sampleBtn'),
@@ -473,6 +478,17 @@ const els = {
   subjectiveList: document.getElementById('subjectiveList'),
   pathList: document.getElementById('pathList'),
   riskList: document.getElementById('riskList'),
+  qualityCard: document.getElementById('qualityCard'),
+  qualityList: document.getElementById('qualityList'),
+  watchlistBtn: document.getElementById('watchlistBtn'),
+  clearWatchlistBtn: document.getElementById('clearWatchlistBtn'),
+  watchlistRows: document.getElementById('watchlistRows'),
+  journalLabel: document.getElementById('journalLabelInput'),
+  journalNote: document.getElementById('journalNoteInput'),
+  saveJournal: document.getElementById('saveJournalBtn'),
+  exportJournal: document.getElementById('exportJournalBtn'),
+  journalStatus: document.getElementById('journalStatus'),
+  journalRows: document.getElementById('journalRows'),
   compareGrid: document.getElementById('compareGrid'),
   reviewGrid: document.getElementById('reviewGrid'),
   reset: document.getElementById('resetBtn'),
@@ -483,6 +499,32 @@ const els = {
 let selectedTicker = stocks[0].ticker;
 let activePreset = 'tenx';
 let dataMode = 'sample';
+const qualityThreshold = 70;
+const storageKeys = {
+  watchlist: 'tenx-cycle-watchlist-v1',
+  journal: 'tenx-cycle-journal-v1',
+};
+
+function readStorage(key, fallback) {
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function writeStorage(key, value) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (_) {
+    return false;
+  }
+  return true;
+}
+
+let watchlist = readStorage(storageKeys.watchlist, []);
+let journal = readStorage(storageKeys.journal, []);
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -496,6 +538,77 @@ function escapeHtml(value) {
 
 function clamp(value, min = 0, max = 100) {
   return Math.max(min, Math.min(max, value));
+}
+
+function hasText(value) {
+  return String(value ?? '').trim().length > 0;
+}
+
+function hasNumber(value) {
+  return Number.isFinite(Number(value));
+}
+
+function qualityClass(score) {
+  if (score >= 85) return 'ok';
+  if (score >= qualityThreshold) return 'warn';
+  return 'danger';
+}
+
+function assessDataQuality(stock) {
+  const missingFields = stock.missingFields ?? [];
+  const missingPathText = [
+    stock.thesis,
+    stock.bear,
+    stock.path,
+    stock.invalidation,
+  ].some(value => String(value ?? '').includes('未提供') || String(value ?? '').includes('数据缺失'));
+  const checks = [
+    {
+      label: '基础标识',
+      ok: hasText(stock.ticker) && hasText(stock.name) && hasText(stock.market) && hasText(stock.sector),
+      fix: '补齐 ticker、name、market、sector。',
+    },
+    {
+      label: '行情与因子',
+      ok: stock.price > 0 &&
+        ['momentum', 'quality', 'valuationRisk', 'drawdownRisk', 'liquidity', 'growth'].every(field => hasNumber(stock[field])),
+      fix: '补齐价格、动量、质量、估值风险、回撤风险、流动性和增长字段。',
+    },
+    {
+      label: '十倍路径',
+      ok: stock.pathMultiple > 0 && hasText(stock.path) && hasText(stock.thesis) && !missingPathText,
+      fix: '补齐 thesis、path、pathMultiple，并说明上限情景不是承诺收益。',
+    },
+    {
+      label: '反方与失效',
+      ok: hasText(stock.bear) && hasText(stock.invalidation) && !missingPathText,
+      fix: '补齐 bear 和 invalidation，明确何时降级或剔除。',
+    },
+    {
+      label: '来源与时间',
+      ok: stock.source !== 'imported' || hasText(stock.dataDate),
+      fix: '导入数据建议提供 dataDate/asOf/updatedAt，便于复盘。',
+    },
+  ];
+  const score = Math.round((checks.filter(check => check.ok).length / checks.length) * 100);
+  const warnings = checks
+    .filter(check => !check.ok)
+    .map(check => `${check.label}：${check.fix}`);
+  if (stock.source === 'imported') {
+    warnings.unshift(`本地导入：来源为 ${stock.dataSource || '未标注'}，需自行核验原始数据。`);
+  } else {
+    warnings.push('示例静态数据：仅用于验证界面和筛选逻辑，不能替代实时行情和公告。');
+  }
+  if (missingFields.length) {
+    warnings.push(`导入缺失字段：${missingFields.slice(0, 8).join(', ')}${missingFields.length > 8 ? ' 等' : ''}`);
+  }
+  return {
+    score,
+    passed: score >= qualityThreshold,
+    status: score >= qualityThreshold ? '可进入研究' : '需补数据',
+    warnings,
+    checks,
+  };
 }
 
 function scoreStock(stock) {
@@ -563,6 +676,7 @@ function getFilters() {
     liquid: els.liquid.checked,
     hasCatalyst: els.hasCatalyst.checked,
     tenXGate: els.tenXGate.checked,
+    qualityGate: els.qualityGate.checked,
     sort: els.sort.value,
   };
 }
@@ -585,7 +699,8 @@ function enrichedStocks() {
       ? { ...defaultMeta, ...stock }
       : { ...defaultMeta, ...stock, ...(stockMeta[stock.ticker] ?? {}) };
     const full = { ...stock, ...meta };
-    return { ...full, ...scoreStock(full) };
+    const scored = { ...full, ...scoreStock(full) };
+    return { ...scored, dataQuality: assessDataQuality(scored) };
   });
 }
 
@@ -605,6 +720,7 @@ function passesFilters(stock, filters) {
   if (filters.liquid && stock.liquidity < 70) return false;
   if (filters.hasCatalyst && !stock.catalyst) return false;
   if (filters.tenXGate && !stock.tenXGate) return false;
+  if (filters.qualityGate && !stock.dataQuality.passed) return false;
   return true;
 }
 
@@ -635,9 +751,32 @@ function renderRows(list) {
       <td><strong>${stock.score}</strong></td>
       <td>${stock.pathMultiple.toFixed(1)}x</td>
       <td><span class="risk-pill ${riskClass(stock)}">${stock.drawdownRisk}</span></td>
+      <td><span class="quality-pill ${qualityClass(stock.dataQuality.score)}">${stock.dataQuality.score}</span></td>
       <td>${escapeHtml(labelFor(stock, stock.score))}</td>
     </tr>
   `).join('');
+}
+
+function renderDataQuality(stock) {
+  const quality = stock.dataQuality;
+  els.qualityCard.innerHTML = `
+    <div>
+      <span>质量分</span>
+      <strong class="${qualityClass(quality.score)}">${quality.score}</strong>
+    </div>
+    <div>
+      <span>闸门状态</span>
+      <strong>${escapeHtml(quality.status)}</strong>
+    </div>
+    <div>
+      <span>数据时点</span>
+      <strong>${escapeHtml(stock.dataDate || (stock.source === 'imported' ? '未标注' : '2026-06-08 示例'))}</strong>
+    </div>
+  `;
+  els.qualityList.innerHTML = quality.warnings
+    .slice(0, 6)
+    .map(item => `<li>${escapeHtml(item)}</li>`)
+    .join('');
 }
 
 function renderSelected(stock) {
@@ -692,6 +831,7 @@ function renderSelected(stock) {
     `触发复查：路径分跌破 ${Math.max(55, stock.pathScore - 12)}、回撤风险升至 80 以上、或核心逻辑被财报/新闻证伪。`,
     `数据缺口：当前为示例静态数据，真实使用必须接入行情、财报、公告和新闻更新时间。`,
   ].map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  renderDataQuality(stock);
 }
 
 function renderCompare(list) {
@@ -727,6 +867,85 @@ function renderReview(stock) {
   `).join('');
 }
 
+function snapshotStock(stock) {
+  return {
+    ticker: stock.ticker,
+    name: stock.name,
+    market: stock.market,
+    sector: stock.sector,
+    score: stock.score,
+    pathScore: stock.pathScore,
+    pathMultiple: stock.pathMultiple,
+    status: labelFor(stock, stock.score),
+    qualityScore: stock.dataQuality.score,
+    savedAt: new Date().toISOString(),
+    path: stock.path,
+    invalidation: stock.invalidation,
+  };
+}
+
+function findByTicker(ticker, universe) {
+  return universe.find(stock => stock.ticker === ticker);
+}
+
+function selectedStock(universe = enrichedStocks()) {
+  return findByTicker(selectedTicker, universe) ?? universe[0];
+}
+
+function renderWatchlist(universe) {
+  const selected = selectedStock(universe);
+  const selectedSaved = watchlist.some(item => item.ticker === selected?.ticker);
+  els.watchlistBtn.textContent = selectedSaved ? '移出研究清单' : '加入研究清单';
+  els.clearWatchlistBtn.disabled = watchlist.length === 0;
+  if (!watchlist.length) {
+    els.watchlistRows.innerHTML = '<div class="empty-inline">还没有研究标的。先在候选表中选中股票，再加入研究清单。</div>';
+    return;
+  }
+  els.watchlistRows.innerHTML = watchlist.map(item => {
+    const live = findByTicker(item.ticker, universe);
+    const stock = live ?? item;
+    const status = live ? labelFor(live, live.score) : item.status;
+    return `
+      <article class="watch-item ${stock.ticker === selectedTicker ? 'active' : ''}">
+        <button type="button" data-watch-select="${escapeHtml(stock.ticker)}">
+          <b>${escapeHtml(stock.ticker)}</b>
+          <span>${escapeHtml(stock.name)}</span>
+        </button>
+        <div>
+          <span>路径 ${stock.pathScore}</span>
+          <span>${Number(stock.pathMultiple).toFixed(1)}x</span>
+          <span>数据 ${stock.qualityScore ?? stock.dataQuality?.score ?? '-'}</span>
+        </div>
+        <small>${escapeHtml(status)}</small>
+        <button class="remove-btn" type="button" data-watch-remove="${escapeHtml(stock.ticker)}">移出</button>
+      </article>
+    `;
+  }).join('');
+}
+
+function renderJournal(universe) {
+  if (!journal.length) {
+    els.journalRows.innerHTML = '<div class="empty-inline">暂无决策日志。保存时会记录当前标的、路径分、数据质量和判断理由。</div>';
+    els.journalStatus.textContent = '暂无日志。';
+    return;
+  }
+  els.journalStatus.textContent = `已保存 ${journal.length} 条日志。`;
+  els.journalRows.innerHTML = journal.slice(0, 8).map(entry => {
+    const live = findByTicker(entry.ticker, universe);
+    const qualityScore = live?.dataQuality.score ?? entry.qualityScore ?? '-';
+    return `
+      <article class="journal-item">
+        <div>
+          <b>${escapeHtml(entry.ticker)} · ${escapeHtml(entry.state)}</b>
+          <time>${escapeHtml(entry.timeLabel)}</time>
+        </div>
+        <p>${escapeHtml(entry.note)}</p>
+        <span>路径分 ${entry.pathScore} · 路径倍数 ${Number(entry.pathMultiple).toFixed(1)}x · 数据质量 ${qualityScore}</span>
+      </article>
+    `;
+  }).join('');
+}
+
 function updateLabels() {
   els.pathScoreValue.textContent = els.pathScore.value;
   els.pathMultipleValue.textContent = els.pathMultiple.value;
@@ -744,16 +963,19 @@ function updateLabels() {
 function render() {
   updateLabels();
   const filters = getFilters();
-  const list = sortStocks(enrichedStocks().filter(stock => passesFilters(stock, filters)), filters.sort);
+  const all = enrichedStocks();
+  const list = sortStocks(all.filter(stock => passesFilters(stock, filters)), filters.sort);
   if (!list.some(stock => stock.ticker === selectedTicker)) {
     selectedTicker = list[0]?.ticker ?? stocks[0].ticker;
   }
-  const selected = enrichedStocks().find(stock => stock.ticker === selectedTicker) ?? enrichedStocks()[0];
+  const selected = findByTicker(selectedTicker, all) ?? all[0];
   els.matchCount.textContent = list.length;
   els.topScore.textContent = list[0]?.pathScore ?? 0;
   els.emptyState.hidden = list.length > 0;
   renderRows(list);
   renderSelected(selected);
+  renderWatchlist(all);
+  renderJournal(all);
   renderCompare(list);
   renderReview(selected);
 }
@@ -773,16 +995,19 @@ function applyPreset(key) {
   els.liquid.checked = preset.liquid;
   els.hasCatalyst.checked = preset.hasCatalyst;
   els.tenXGate.checked = preset.tenXGate;
+  els.qualityGate.checked = preset.qualityGate;
   els.tabs.forEach(tab => tab.setAttribute('aria-pressed', String(tab.dataset.preset === key)));
   render();
 }
 
 function analysisText() {
-  const stock = enrichedStocks().find(item => item.ticker === selectedTicker) ?? enrichedStocks()[0];
+  const stock = selectedStock();
   return [
     `标的/主题：${stock.ticker} ${stock.name}`,
     `数据时点：${dataMode === 'sample' ? '示例静态数据 2026-06-08' : '本地导入数据，需自行确认来源和时间戳'}`,
     '适用对象假设：仅用于一周期十倍候选研究，不构成个性化投资建议',
+    `数据质量：${stock.dataQuality.score}，${stock.dataQuality.status}`,
+    `数据缺口：${stock.dataQuality.warnings.slice(0, 3).join('；')}`,
     '',
     `十倍路径分：${stock.pathScore}`,
     `路径倍数假设：${stock.pathMultiple.toFixed(1)}x`,
@@ -825,6 +1050,7 @@ function analysisText() {
   els.liquid,
   els.hasCatalyst,
   els.tenXGate,
+  els.qualityGate,
   els.sort,
 ].forEach(input => {
   input.addEventListener('input', () => {
@@ -891,9 +1117,33 @@ function parseRows(text) {
   });
 }
 
+const requiredImportFields = [
+  'ticker',
+  'name',
+  'market',
+  'sector',
+  'price',
+  'momentum',
+  'quality',
+  'valuationRisk',
+  'drawdownRisk',
+  'liquidity',
+  'growth',
+  'pathMultiple',
+  'thesis',
+  'bear',
+  'path',
+  'invalidation',
+];
+
+function hasRowValue(row, field) {
+  return Object.prototype.hasOwnProperty.call(row, field) && hasText(row[field]);
+}
+
 function normalizeImportedStock(row, index) {
   const ticker = String(row.ticker ?? row.code ?? '').trim().toUpperCase();
   if (!ticker) throw new Error(`第 ${index + 1} 行缺少 ticker`);
+  const missingFields = requiredImportFields.filter(field => !hasRowValue(row, field));
   return {
     source: 'imported',
     ticker,
@@ -922,6 +1172,9 @@ function normalizeImportedStock(row, index) {
     bear: String(row.bear ?? '导入数据未提供反方观点。').trim(),
     path: String(row.path ?? '导入数据未提供十倍路径假设。').trim(),
     invalidation: String(row.invalidation ?? '导入数据未提供失效条件。').trim(),
+    dataSource: String(row.dataSource ?? row.sourceName ?? row.source ?? '本地导入').trim() || '本地导入',
+    dataDate: String(row.dataDate ?? row.asOf ?? row.updatedAt ?? '').trim(),
+    missingFields,
   };
 }
 
@@ -949,11 +1202,81 @@ function restoreSampleData() {
   render();
 }
 
+function toggleWatchlist() {
+  const stock = selectedStock();
+  if (!stock) return;
+  if (watchlist.some(item => item.ticker === stock.ticker)) {
+    watchlist = watchlist.filter(item => item.ticker !== stock.ticker);
+  } else {
+    watchlist = [snapshotStock(stock), ...watchlist.filter(item => item.ticker !== stock.ticker)];
+  }
+  writeStorage(storageKeys.watchlist, watchlist);
+  render();
+}
+
+function saveJournalEntry() {
+  const stock = selectedStock();
+  const note = els.journalNote.value.trim();
+  if (!stock || !note) {
+    els.journalStatus.textContent = '请先填写本次判断。';
+    return;
+  }
+  const now = new Date();
+  journal = [{
+    id: `${now.getTime()}-${stock.ticker}`,
+    ticker: stock.ticker,
+    name: stock.name,
+    state: els.journalLabel.value,
+    note,
+    pathScore: stock.pathScore,
+    pathMultiple: stock.pathMultiple,
+    score: stock.score,
+    qualityScore: stock.dataQuality.score,
+    status: labelFor(stock, stock.score),
+    path: stock.path,
+    invalidation: stock.invalidation,
+    dataStamp: dataMode === 'sample' ? '示例路径模型 2026-06-08' : (stock.dataDate || '本地导入，未标注时间'),
+    time: now.toISOString(),
+    timeLabel: now.toLocaleString('zh-CN', { hour12: false }),
+  }, ...journal].slice(0, 100);
+  writeStorage(storageKeys.journal, journal);
+  els.journalNote.value = '';
+  els.journalStatus.textContent = '已保存日志。';
+  render();
+}
+
+async function copyJournal() {
+  if (!journal.length) {
+    els.journalStatus.textContent = '暂无可复制日志。';
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(journal, null, 2));
+    els.journalStatus.textContent = '日志 JSON 已复制。';
+  } catch (_) {
+    els.journalStatus.textContent = '复制失败，请检查浏览器剪贴板权限。';
+  }
+}
+
 els.stockRows.addEventListener('click', event => {
   const row = event.target.closest('[data-ticker]');
   if (!row) return;
   selectedTicker = row.dataset.ticker;
   render();
+});
+
+els.watchlistRows.addEventListener('click', event => {
+  const selectButton = event.target.closest('[data-watch-select]');
+  const removeButton = event.target.closest('[data-watch-remove]');
+  if (selectButton) {
+    selectedTicker = selectButton.dataset.watchSelect;
+    render();
+  }
+  if (removeButton) {
+    watchlist = watchlist.filter(item => item.ticker !== removeButton.dataset.watchRemove);
+    writeStorage(storageKeys.watchlist, watchlist);
+    render();
+  }
 });
 
 els.tabs.forEach(tab => {
@@ -962,6 +1285,16 @@ els.tabs.forEach(tab => {
 
 els.importBtn.addEventListener('click', importData);
 els.sampleBtn.addEventListener('click', restoreSampleData);
+els.watchlistBtn.addEventListener('click', toggleWatchlist);
+els.clearWatchlistBtn.addEventListener('click', () => {
+  if (!watchlist.length) return;
+  if (!window.confirm('清空本机研究清单？')) return;
+  watchlist = [];
+  writeStorage(storageKeys.watchlist, watchlist);
+  render();
+});
+els.saveJournal.addEventListener('click', saveJournalEntry);
+els.exportJournal.addEventListener('click', copyJournal);
 
 els.reset.addEventListener('click', () => {
   els.market.value = 'all';
