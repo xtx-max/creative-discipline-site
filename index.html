@@ -131,6 +131,16 @@
           <strong>边界</strong>
           <p>“十倍”只代表研究路径假设，不承诺收益。真实上线前必须接入实时行情、财报、公告、新闻、成交量和更新时间。</p>
         </div>
+
+        <div class="import-box">
+          <strong>数据导入</strong>
+          <textarea id="dataInput" rows="5" placeholder="粘贴 CSV 或 JSON 数组。字段示例：ticker,name,market,sector,price,momentum,quality,valuationRisk,drawdownRisk,liquidity,growth,pathMultiple"></textarea>
+          <div class="import-actions">
+            <button class="ghost-btn" id="importBtn" type="button">导入</button>
+            <button class="ghost-btn" id="sampleBtn" type="button">恢复示例</button>
+          </div>
+          <p id="importStatus">当前使用内置示例数据。</p>
+        </div>
       </aside>
 
       <section class="panel result-panel">

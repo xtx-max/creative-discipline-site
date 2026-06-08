@@ -1,4 +1,4 @@
-const stocks = [
+let stocks = [
   {
     ticker: 'NVDA',
     name: 'NVIDIA',
@@ -216,6 +216,8 @@ const stocks = [
     bear: '海外监管、补贴强度和竞争加剧可能影响利润质量。',
   },
 ];
+
+const sampleStocks = stocks.map(stock => ({ ...stock }));
 
 const stockMeta = {
   NVDA: {
@@ -454,6 +456,10 @@ const els = {
   liquid: document.getElementById('liquidInput'),
   hasCatalyst: document.getElementById('hasCatalystInput'),
   tenXGate: document.getElementById('tenXGateInput'),
+  dataInput: document.getElementById('dataInput'),
+  importBtn: document.getElementById('importBtn'),
+  sampleBtn: document.getElementById('sampleBtn'),
+  importStatus: document.getElementById('importStatus'),
   sort: document.getElementById('sortInput'),
   stockRows: document.getElementById('stockRows'),
   emptyState: document.getElementById('emptyState'),
@@ -476,6 +482,7 @@ const els = {
 
 let selectedTicker = stocks[0].ticker;
 let activePreset = 'tenx';
+let dataMode = 'sample';
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -562,7 +569,7 @@ function getFilters() {
 
 function enrichedStocks() {
   return stocks.map(stock => {
-    const meta = stockMeta[stock.ticker] ?? {
+    const defaultMeta = {
       cyclePhase: 'mid',
       cycleLabel: '中段扩张',
       cycleElasticity: 50,
@@ -574,6 +581,9 @@ function enrichedStocks() {
       path: '缺少十倍路径数据。',
       invalidation: '数据缺失。',
     };
+    const meta = stock.source === 'imported'
+      ? { ...defaultMeta, ...stock }
+      : { ...defaultMeta, ...stock, ...(stockMeta[stock.ticker] ?? {}) };
     const full = { ...stock, ...meta };
     return { ...full, ...scoreStock(full) };
   });
@@ -726,7 +736,9 @@ function updateLabels() {
   els.valuationRiskValue.textContent = els.valuationRisk.value;
   els.drawdownValue.textContent = els.drawdown.value;
   els.strategyName.textContent = presets[activePreset]?.name ?? '自定义';
-  els.dataStamp.textContent = '示例路径模型 2026-06-08';
+  els.dataStamp.textContent = dataMode === 'sample'
+    ? '示例路径模型 2026-06-08'
+    : '本地导入数据';
 }
 
 function render() {
@@ -769,7 +781,7 @@ function analysisText() {
   const stock = enrichedStocks().find(item => item.ticker === selectedTicker) ?? enrichedStocks()[0];
   return [
     `标的/主题：${stock.ticker} ${stock.name}`,
-    '数据时点：示例静态数据 2026-06-08',
+    `数据时点：${dataMode === 'sample' ? '示例静态数据 2026-06-08' : '本地导入数据，需自行确认来源和时间戳'}`,
     '适用对象假设：仅用于一周期十倍候选研究，不构成个性化投资建议',
     '',
     `十倍路径分：${stock.pathScore}`,
@@ -827,6 +839,116 @@ function analysisText() {
   });
 });
 
+function parseBoolean(value) {
+  const text = String(value ?? '').trim().toLowerCase();
+  return ['1', 'true', 'yes', 'y', '是', '有'].includes(text);
+}
+
+function parseNumber(value, fallback) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function splitCsvLine(line) {
+  const cells = [];
+  let current = '';
+  let quoted = false;
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    const next = line[index + 1];
+    if (char === '"' && quoted && next === '"') {
+      current += '"';
+      index += 1;
+    } else if (char === '"') {
+      quoted = !quoted;
+    } else if (char === ',' && !quoted) {
+      cells.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  cells.push(current.trim());
+  return cells;
+}
+
+function parseRows(text) {
+  const trimmed = text.trim();
+  if (!trimmed) return [];
+  if (trimmed.startsWith('[')) {
+    const parsed = JSON.parse(trimmed);
+    if (!Array.isArray(parsed)) throw new Error('JSON 必须是数组');
+    return parsed;
+  }
+  const lines = trimmed.split(/\r?\n/).filter(Boolean);
+  const headers = splitCsvLine(lines[0]).map(header => header.trim());
+  return lines.slice(1).map(line => {
+    const cells = splitCsvLine(line);
+    return headers.reduce((row, header, index) => {
+      row[header] = cells[index] ?? '';
+      return row;
+    }, {});
+  });
+}
+
+function normalizeImportedStock(row, index) {
+  const ticker = String(row.ticker ?? row.code ?? '').trim().toUpperCase();
+  if (!ticker) throw new Error(`第 ${index + 1} 行缺少 ticker`);
+  return {
+    source: 'imported',
+    ticker,
+    name: String(row.name ?? ticker).trim(),
+    market: String(row.market ?? 'US').trim() || 'US',
+    sector: String(row.sector ?? 'AI').trim() || 'AI',
+    price: parseNumber(row.price, 0),
+    momentum: clamp(parseNumber(row.momentum, 50)),
+    quality: clamp(parseNumber(row.quality, 50)),
+    valuationRisk: clamp(parseNumber(row.valuationRisk, 60)),
+    drawdownRisk: clamp(parseNumber(row.drawdownRisk, 60)),
+    liquidity: clamp(parseNumber(row.liquidity, 70)),
+    growth: clamp(parseNumber(row.growth, 55)),
+    fcfPositive: row.fcfPositive === undefined ? true : parseBoolean(row.fcfPositive),
+    profitable: row.profitable === undefined ? true : parseBoolean(row.profitable),
+    catalyst: row.catalyst === undefined ? false : parseBoolean(row.catalyst),
+    cyclePhase: String(row.cyclePhase ?? 'mid').trim() || 'mid',
+    cycleLabel: String(row.cycleLabel ?? '中段扩张').trim() || '中段扩张',
+    cycleElasticity: clamp(parseNumber(row.cycleElasticity, parseNumber(row.momentum, 50))),
+    earningsInflection: clamp(parseNumber(row.earningsInflection, parseNumber(row.growth, 55))),
+    narrativePower: clamp(parseNumber(row.narrativePower, 55)),
+    optionality: clamp(parseNumber(row.optionality, 55)),
+    pathMultiple: parseNumber(row.pathMultiple, 2),
+    tenXGate: row.tenXGate === undefined ? parseNumber(row.pathMultiple, 2) >= 4 : parseBoolean(row.tenXGate),
+    thesis: String(row.thesis ?? '导入数据未提供长期逻辑。').trim(),
+    bear: String(row.bear ?? '导入数据未提供反方观点。').trim(),
+    path: String(row.path ?? '导入数据未提供十倍路径假设。').trim(),
+    invalidation: String(row.invalidation ?? '导入数据未提供失效条件。').trim(),
+  };
+}
+
+function importData() {
+  try {
+    const rows = parseRows(els.dataInput.value);
+    const imported = rows.map(normalizeImportedStock);
+    if (!imported.length) throw new Error('没有可导入的数据');
+    stocks = imported;
+    dataMode = 'imported';
+    selectedTicker = stocks[0].ticker;
+    els.importStatus.textContent = `已导入 ${stocks.length} 条数据。缺失路径字段会使用中性默认值。`;
+    render();
+  } catch (error) {
+    els.importStatus.textContent = `导入失败：${error.message}`;
+  }
+}
+
+function restoreSampleData() {
+  stocks = sampleStocks.map(stock => ({ ...stock }));
+  dataMode = 'sample';
+  selectedTicker = stocks[0].ticker;
+  els.dataInput.value = '';
+  els.importStatus.textContent = '当前使用内置示例数据。';
+  render();
+}
+
 els.stockRows.addEventListener('click', event => {
   const row = event.target.closest('[data-ticker]');
   if (!row) return;
@@ -837,6 +959,9 @@ els.stockRows.addEventListener('click', event => {
 els.tabs.forEach(tab => {
   tab.addEventListener('click', () => applyPreset(tab.dataset.preset));
 });
+
+els.importBtn.addEventListener('click', importData);
+els.sampleBtn.addEventListener('click', restoreSampleData);
 
 els.reset.addEventListener('click', () => {
   els.market.value = 'all';
