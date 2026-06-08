@@ -51,9 +51,11 @@
         <label class="field">
           <span>市场</span>
           <select id="marketInput">
-            <option value="all">全部市场</option>
-            <option value="US">美股</option>
-            <option value="CN">A股/港股</option>
+            <option value="all">全部 A 股</option>
+            <option value="SSE_MAIN">沪市主板</option>
+            <option value="SZSE_MAIN">深市主板</option>
+            <option value="STAR">科创板</option>
+            <option value="CHINEXT">创业板</option>
           </select>
         </label>
 
@@ -61,10 +63,12 @@
           <span>行业</span>
           <select id="sectorInput">
             <option value="all">全部行业</option>
-            <option value="AI">AI/半导体</option>
+            <option value="AI">AI/算力</option>
+            <option value="Semiconductor">半导体</option>
             <option value="Consumer">消费</option>
             <option value="Healthcare">医药</option>
-            <option value="Energy">能源/材料</option>
+            <option value="Resources">资源/材料</option>
+            <option value="Industrial">工业自动化</option>
             <option value="Finance">金融</option>
             <option value="EV">新能源车</option>
           </select>
@@ -83,16 +87,16 @@
 
         <div class="slider-stack">
           <label class="slider-field priority">
-            <span>最低十倍路径分 <b id="pathScoreValue">72</b></span>
-            <input id="pathScoreInput" type="range" min="30" max="95" value="72" />
+            <span>最低十倍路径分 <b id="pathScoreValue">62</b></span>
+            <input id="pathScoreInput" type="range" min="30" max="95" value="62" />
           </label>
           <label class="slider-field priority">
             <span>最低路径倍数 <b id="pathMultipleValue">4</b>x</span>
             <input id="pathMultipleInput" type="range" min="1" max="10" value="4" />
           </label>
           <label class="slider-field">
-            <span>最低综合分 <b id="minScoreValue">68</b></span>
-            <input id="minScoreInput" type="range" min="40" max="95" value="68" />
+            <span>最低综合分 <b id="minScoreValue">62</b></span>
+            <input id="minScoreInput" type="range" min="40" max="95" value="62" />
           </label>
           <label class="slider-field">
             <span>最低动量 <b id="momentumValue">55</b></span>
@@ -130,12 +134,12 @@
 
         <div class="disclosure-box">
           <strong>边界</strong>
-          <p>“十倍”只代表研究路径假设，不承诺收益。真实上线前必须接入实时行情、财报、公告、新闻、成交量和更新时间。</p>
+          <p>“十倍”只代表 A 股研究路径假设，不承诺收益。真实上线前必须接入实时行情、财报、公告、龙虎榜/资金流、成交量和更新时间。</p>
         </div>
 
         <div class="import-box">
           <strong>数据导入</strong>
-          <textarea id="dataInput" rows="5" placeholder="粘贴 CSV 或 JSON 数组。字段示例：ticker,name,market,sector,price,momentum,quality,valuationRisk,drawdownRisk,liquidity,growth,pathMultiple"></textarea>
+          <textarea id="dataInput" rows="5" placeholder="粘贴 A 股 CSV 或 JSON 数组。字段示例：ticker,name,market,sector,price,momentum,quality,valuationRisk,drawdownRisk,liquidity,growth,pathMultiple,dataDate"></textarea>
           <div class="import-actions">
             <button class="ghost-btn" id="importBtn" type="button">导入</button>
             <button class="ghost-btn" id="sampleBtn" type="button">恢复示例</button>
@@ -317,8 +321,8 @@
     </figure>
 
     <footer class="site-foot">
-      <span>仅作十倍候选研究和复盘，不提供个性化投资建议。</span>
-      <span>真实上线前必须接入可靠数据源、披露更新时间、审计筛选条件和模型版本。</span>
+      <span>仅作 A 股十倍候选研究和复盘，不提供个性化投资建议。</span>
+      <span>真实上线前必须接入可靠 A 股行情、财报、公告和资金数据，并披露更新时间和模型版本。</span>
     </footer>
   </main>
 
